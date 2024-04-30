@@ -1,0 +1,410 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>跟着小康学编程 | 跟着小康学编程</title><meta name="author" content="小康"><meta name="copyright" content="小康"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="大家好，我是小康，今天给大家聊下 Redis 的几种持久化机制。 Redis 持久化前言： 在数字时代，数据的价值越来越被人们所重视。但数据只有在经过妥善保管和管理时，才能真正发挥其潜在价值。对于使用 Redis 这一热门的内存数据库的开发者和企业来说，数据的持久化无疑是一个必须面对的重要议题。 我们都知道，Redis 以其卓越的性能和灵活的数据结构而著称，但如何确保内存中的数据不因突发事件而丢失">
+<meta property="og:type" content="article">
+<meta property="og:title" content="跟着小康学编程">
+<meta property="og:url" content="http://example.com/RedisPersistence/index.html">
+<meta property="og:site_name" content="跟着小康学编程">
+<meta property="og:description" content="大家好，我是小康，今天给大家聊下 Redis 的几种持久化机制。 Redis 持久化前言： 在数字时代，数据的价值越来越被人们所重视。但数据只有在经过妥善保管和管理时，才能真正发挥其潜在价值。对于使用 Redis 这一热门的内存数据库的开发者和企业来说，数据的持久化无疑是一个必须面对的重要议题。 我们都知道，Redis 以其卓越的性能和灵活的数据结构而著称，但如何确保内存中的数据不因突发事件而丢失">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/img/me.jpg">
+<meta property="article:published_time" content="2024-04-30T03:34:53.707Z">
+<meta property="article:modified_time" content="2024-04-30T09:20:36.290Z">
+<meta property="article:author" content="小康">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/img/me.jpg"><link rel="shortcut icon" href="/img/me.jpg"><link rel="canonical" href="http://example.com/RedisPersistence/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css?v=4.13.0"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.1/css/all.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.33/dist/fancybox/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":false,"top_n_per_article":1,"unescape":false,"languages":{"hits_empty":"找不到您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":false,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: {"limitCount":50,"languages":{"author":"作者: 小康","link":"链接: ","source":"来源: 跟着小康学编程","info":"著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。"}},
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid@4.11.1/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyload: true,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '跟着小康学编程',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2024-04-30 17:20:36'
+}</script><script>(win=>{
+      win.saveToLocal = {
+        set: (key, value, ttl) => {
+          if (ttl === 0) return
+          const now = Date.now()
+          const expiry = now + ttl * 86400000
+          const item = {
+            value,
+            expiry
+          }
+          localStorage.setItem(key, JSON.stringify(item))
+        },
+      
+        get: key => {
+          const itemStr = localStorage.getItem(key)
+      
+          if (!itemStr) {
+            return undefined
+          }
+          const item = JSON.parse(itemStr)
+          const now = Date.now()
+      
+          if (now > item.expiry) {
+            localStorage.removeItem(key)
+            return undefined
+          }
+          return item.value
+        }
+      }
+    
+      win.getScript = (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        script.onerror = reject
+        script.onload = script.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          script.onload = script.onreadystatechange = null
+          resolve()
+        }
+
+        Object.keys(attr).forEach(key => {
+          script.setAttribute(key, attr[key])
+        })
+
+        document.head.appendChild(script)
+      })
+    
+      win.getCSS = (url, id = false) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onerror = reject
+        link.onload = link.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          link.onload = link.onreadystatechange = null
+          resolve()
+        }
+        document.head.appendChild(link)
+      })
+    
+      win.activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+        if (t === 'dark') activateDarkMode()
+        else if (t === 'light') activateLightMode()
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+      const detectApple = () => {
+        if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+          document.documentElement.classList.add('apple')
+        }
+      }
+      detectApple()
+    })(window)</script><meta name="generator" content="Hexo 7.2.0"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/me.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">15</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">36</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">16</div></a></div><hr class="custom-hr"/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于笔者</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('/img/category_img.jpg')"><nav id="nav"><span id="blog-info"><a href="/" title="跟着小康学编程"><span class="site-name">跟着小康学编程</span></a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search" href="javascript:void(0);"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于笔者</span></a></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">无题</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2024-04-30T03:34:53.707Z" title="发表于 2024-04-30 11:34:53">2024-04-30</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2024-04-30T09:20:36.290Z" title="更新于 2024-04-30 17:20:36">2024-04-30</time></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><p>大家好，我是小康，今天给大家聊下 Redis 的几种持久化机制。</p>
+<h1 id="Redis-持久化"><a href="#Redis-持久化" class="headerlink" title="Redis 持久化"></a>Redis 持久化</h1><p><strong>前言：</strong></p>
+<p>在数字时代，数据的价值越来越被人们所重视。但数据只有在经过妥善保管和管理时，才能真正发挥其潜在价值。对于使用 Redis 这一热门的内存数据库的开发者和企业来说，数据的持久化无疑是一个必须面对的重要议题。</p>
+<p>我们都知道，Redis 以其卓越的性能和灵活的数据结构而著称，但如何确保内存中的数据不因突发事件而丢失？如何在确保性能的前提下，为数据提供一个更加稳固的避风港？</p>
+<p>本文将为你揭开 Redis 持久化的神秘面纱，探讨其背后的机制，并帮助你为你的应用选择合适的持久化策略。</p>
+<h2 id="Redis与内存数据库的特性"><a href="#Redis与内存数据库的特性" class="headerlink" title="Redis与内存数据库的特性"></a>Redis与内存数据库的特性</h2><h3 id="为什么Redis是内存数据库？"><a href="#为什么Redis是内存数据库？" class="headerlink" title="为什么Redis是内存数据库？"></a>为什么Redis是内存数据库？</h3><p>Redis是一种键值存储系统，其数据主要存储在<strong>内存</strong>中，因此被称为<strong>内存数据库</strong>。与传统的磁盘存储数据库不同，Redis的设计初衷是为了提供高速、低延迟的数据访问。由于数据直接存储在内存中，可以避免磁盘I&#x2F;O的开销，从而实现极高的读写速度。</p>
+<p>🔍例子: 想象一下你在家里找一本书。如果这本书就放在你的桌子上（相当于内存），你可以立刻拿到它。但如果它放在地下室的一个盒子里（相当于磁盘），那你可能需要花费更多时间去找。Redis的工作方式就像那本放在桌子上的书。</p>
+<h3 id="内存数据库的优点和缺点"><a href="#内存数据库的优点和缺点" class="headerlink" title="内存数据库的优点和缺点"></a>内存数据库的优点和缺点</h3><p><strong>优点：</strong></p>
+<ul>
+<li><strong>速度：</strong>内存数据库如Redis能够提供快速的读写能力，因为内存的访问速度远超过磁盘。</li>
+<li><strong>低延迟：</strong>数据存取的响应时间短，适合需要快速响应的应用。</li>
+<li><strong>灵活性：</strong>由于数据结构存储在内存中，Redis等内存数据库支持丰富的数据类型和操作。</li>
+<li><strong>简化的数据模型：</strong>键值存储方式简化了数据模型，便于开发和维护。</li>
+</ul>
+<p><strong>缺点：</strong></p>
+<ul>
+<li><strong>成本：</strong>内存通常比磁盘更昂贵，大量的数据存储需要大量的内存，可能导致高成本。</li>
+<li><strong>数据持久性风险：</strong>如果没有合适的持久化策略，突然的系统崩溃可能导致数据丢失。</li>
+<li><strong>数据容量限制：</strong>由于依赖内存，数据的容量受到物理内存大小的限制。</li>
+</ul>
+<h2 id="什么是持久化"><a href="#什么是持久化" class="headerlink" title="什么是持久化"></a>什么是持久化</h2><p><strong>持久化的定义：</strong></p>
+<p><strong>持久化</strong>，顾名思义，指的是将短暂的、易失的数据转化为长时间保存，且不易丢失的格式。在数据库的语境中，持久化常常指的是将内存中的数据保存到硬盘或其他长期存储介质中，从而确保即使在系统崩溃、断电或其他突发事件中，数据也不会丢失。</p>
+<p><strong>持久化的必要性：</strong></p>
+<p><strong>数据安全性</strong>：技术世界并非总是完美的。系统可能会遭受故障、崩溃或遭受攻击。在没有持久化的情况下，所有存储在内存中的数据在这些情况下都可能丢失。持久化提供了一种机制，确保这些数据在发生故障后可以被恢复。</p>
+<p>🔍例子: 想象一下你在电脑上工作了好几个小时，突然停电了。如果你没有定期保存你的工作，那么你可能会失去所有的努力。数据库持久化就像定期保存你的文件，确保即使发生意外，你的数据也不会丢失。</p>
+<h2 id="Redis-持久化的方式"><a href="#Redis-持久化的方式" class="headerlink" title="Redis 持久化的方式"></a>Redis 持久化的方式</h2><p>Redis 提供三种持久化的方式: 分别是 <strong>RDB</strong>（Redis Database Snapshot） 和 <strong>AOF</strong>（Append Only File）以及 <strong>混合持久化</strong>。</p>
+<h3 id="RDB"><a href="#RDB" class="headerlink" title="RDB"></a>RDB</h3><h4 id="RDB是什么？"><a href="#RDB是什么？" class="headerlink" title="RDB是什么？"></a>RDB是什么？</h4><p>RDB 持久化方式是 Redis 将当前内存中的数据快照（snapshot）保存到硬盘的过程。换句话说，Redis 会创建一个代表某一时刻的数据集的磁盘文件。</p>
+<p><strong>例子</strong>: 想象一下相机的快门点击。每当你点击快门，你都会捕捉到那个特定时刻的场景。RDB的工作方式很相似，只不过它捕捉的是数据的状态。</p>
+<p>理解 RDB 的本质后，你可能会问，我们如何生成这个快照呢？使用 <strong>SAVE</strong> 和 <strong>BGSAVE</strong> 命令即可。</p>
+<h4 id="RDB-生成图解"><a href="#RDB-生成图解" class="headerlink" title="RDB 生成图解"></a>RDB 生成图解</h4><p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/images/RedisPersistence/1.png"></p>
+<h4 id="RDB-工作原理"><a href="#RDB-工作原理" class="headerlink" title="RDB 工作原理"></a>RDB 工作原理</h4><h5 id="RDB-生成的流程图"><a href="#RDB-生成的流程图" class="headerlink" title="RDB 生成的流程图"></a>RDB 生成的流程图</h5><p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/images/RedisPersistence/2.png"></p>
+<p><strong>步骤说明</strong>：</p>
+<p><strong>1.触发RDB生成</strong>:</p>
+<p>触发 RDB 文件的生成有以下两种方式:</p>
+<p><strong>手动触发</strong>：通过执行 SAVE 或 BGSAVE 命令。</p>
+<p><strong>自动触发</strong>：基于 Redis 配置文件中的 save 指令设置的条件。（默认是通过 BGSAVE 命令来触发的）</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">redis 配置文件 save 指令设置： </span><br><span class="line">save 3600 1        # 3600秒内如果超过1个key被修改则生成 RDB</span><br><span class="line">save 300 100       # 300秒内如果超过100个key被修改则生成 RDB</span><br><span class="line">save 60 10000      # 60秒内如果超过10000个key被修改则生成 RDB</span><br></pre></td></tr></table></figure>
+<p><strong>2.创建子进程</strong>:</p>
+<p>当执行 BGSAVE 命令时，Redis 主进程（父进程）会执行 fork 操作来创建一个子进程。这是一个昂贵的操作，尤其当数据集很大时。但好处是，一旦 fork 完成，父进程可以立即返回处理其他客户端请求，而不需要等待 RDB 的生成过程。</p>
+<p>这里涉及到操作系统级别的知识。当 fork 操作执行后，子进程会获得父进程内存中的数据副本。但由于操作系统使用<strong>写时复制</strong>（Copy-On-Write, COW）技术，任何在父进程（Redis主进程）上发生的写操作不会影响子进程中的数据。这确保了子进程中的数据是隔离的，不受父进程中数据更改的影响。</p>
+<p><strong>3.子进程生成RDB文件</strong>:</p>
+<p>子进程将开始遍历整个数据集，将所有的数据写入一个新的临时RDB文件。这是一个纯I&#x2F;O操作，并且是线性的，所以非常快。子进程不需要处理任何客户端请求，只专注于写 RDB 文件，所以效率很高。</p>
+<p><strong>注意 ：线性指的是数据在磁盘上是连续写入的。</strong></p>
+<p><strong>4.RDB文件替换</strong>：</p>
+<p>一旦子进程完成了新的 RDB 文件的写入，它会替换掉旧的 RDB 文件，并发送一个信号通知父进程任务完成。然后子进程退出。</p>
+<h5 id="RDB-的载入"><a href="#RDB-的载入" class="headerlink" title="RDB 的载入"></a>RDB 的载入</h5><p>当 Redis 重新启动时，如果配置为使用 RDB 持久化，它会查找 RDB 文件，并加载它。由于 RDB 文件是一个紧凑的二进制表示形式，数据加载非常快。</p>
+<h4 id="RDB-配置详解"><a href="#RDB-配置详解" class="headerlink" title="RDB 配置详解"></a>RDB 配置详解</h4><p>Redis 默认是不会开启持久化选项的，只要重启 redis，redis 之前保存的数据都会丢失的。因此在实际的生产环境中，我们都会配置 Redis 的 RDB 配置。</p>
+<p>redis.conf 中关于 RDB 的所有配置:</p>
+<pre><code>save &lt;seconds&gt; &lt;changes&gt;
+stop-writes-on-bgsave-error
+rdbcompression
+rdbchecksum
+sanitize-dump-payload
+dbfilename
+rdb-del-sync-files
+dir
+</code></pre>
+<p><strong>核心配置的常见问题解答：</strong></p>
+<p><strong>Q: save seconds changes 是什么意思？</strong></p>
+<p>A: 这个配置控制 Redis 如何定期保存数据到磁盘。当指定的时间（秒）内，数据发生的变化次数超过或等于<changes>时，Redis 将触发数据的保存操作。如果想禁用 RDB 持久化，可以在配置文件中注释掉所有的 save 指令，并且重启 Redis 服务即可。</p>
+<p><strong>Q: 我看到了 stop-writes-on-bgsave-error，它的作用是什么？</strong></p>
+<p>A: 当此选项被设置为 yes 时，如果后台保存数据出现错误，Redis 将停止所有写入操作。这是一种保护机制，确保在可能的磁盘问题或其他故障时，不再接受可能导致数据丢失的写操作。<br>当该选项被设置为 no 时，即使后台保存数据出现错误，Redis 仍然会继续接受写入操作。</p>
+<p><strong>Q: rdbcompression 能给我带来什么好处？</strong></p>
+<p>A: rdbcompression 设置为 yes 时，表示启用 rdbcompression， 启用 rdbcompression 会使Redis在保存数据前先对其进行压缩，这样可以减少存储空间的使用。但这也意味着在数据加载时可能需要额外的 CPU 时间来解压。</p>
+<p><strong>Q: 我在配置中看到了 rdbchecksum，这是什么意思</strong>？</p>
+<p>A: rdbchecksum 决定是否在 RDB 文件末尾添加一个 CRC64 校验和。这个校验和帮助检测 RDB 文件是否在传输或存储过程中受到损坏。如果你设置为yes，那么每次 Redis 保存或加载 RDB 文件时，它都会计算并检查这个校验和，确保数据的完整性。</p>
+<p><strong>Q: 什么是sanitize-dump-payload？我应该如何配置它？</strong></p>
+<p>A: 当你有一个Redis数据备份（RDB文件）或者使用 RESTORE 命令来导入数据时，你会希望这些数据是安全的，没有任何问题。但是，有些时候数据可能存在问题，这可能会导致 Redis 在后续的操作中崩溃或者出现错误。</p>
+<p>sanitize-dump-payload 这个配置项就是帮助你在加载数据时检查这些数据的安全性。</p>
+<p>如果你设置为no，那么Redis不会检查数据，这样会更快，但是风险也更大。</p>
+<p>如果设置为yes，Redis会检查所有的数据，确保它们是安全的，不会导致问题。这样更安全，但可能会稍微慢一些。</p>
+<p>如果设置为clients，只有从客户端（比如你的应用程序）发来的数据会被检查，而从其它 Redis 实例同步来的数据或RDB文件不会被检查。</p>
+<p><strong>Q: rdb-del-sync-files 配置是做什么的？</strong></p>
+<p>A: 这个配置项决定是否在某些场景下删除与复制（replication）相关的RDB文件。</p>
+<p>在 Redis 的主从复制过程中，主节点需要生成 RDB 文件并将其发送给从节点，帮助从节点进行数据同步。在某些特定的安全环境中，一旦复制完毕，可能会要求尽快删除这些RDB文件。</p>
+<p>rdb-del-sync-files 这个选项，当设置为 yes 时，并且主节点没有启用 RDB 和 AOF持久化，redis 会自动删除这些与复制相关的 RDB 文件。</p>
+<p>默认为no，这意味着与复制相关的RDB文件在同步后不会被自动删除。</p>
+<p><strong>Q8: dbfilename 和 dir 分别指的是什么？</strong></p>
+<p>A: dbfilename 是 RDB 文件名（默认是 dump.rdb）；dir 则是 RDB 文件存放的目录，默认值 .&#x2F;（当前目录：Redis服务器启动时的工作目录），但推荐指定一个固定的目录，例如：&#x2F;var&#x2F;redis&#x2F;data&#x2F;</p>
+<p><strong>注意：</strong></p>
+<ul>
+<li><p>上述的save 、dbfilename、以及 dir 指令配置是我们重点关注的，其他了解即可。</p>
+</li>
+<li><p>在更改 redis.conf 配置之后，我们需要重启 redis 服务，才能生效。</p>
+</li>
+</ul>
+<h4 id="RDB-持久化的优缺点"><a href="#RDB-持久化的优缺点" class="headerlink" title="RDB 持久化的优缺点"></a>RDB 持久化的优缺点</h4><h5 id="优点"><a href="#优点" class="headerlink" title="优点"></a>优点</h5><p><strong>快速备份</strong>：RDB可以迅速为你创建一个数据的“快照”，这是一个备份文件，方便你存储或者迁移数据。</p>
+<p><strong>启动快</strong>：当Redis重新启动时，RDB能帮助它更快速地加载数据，因为它直接读取一个完整的数据文件。</p>
+<p><strong>节省空间</strong>：与其他持久化方式相比，RDB的文件大小通常较小，因为它是经过压缩的。</p>
+<h5 id="缺点："><a href="#缺点：" class="headerlink" title="缺点："></a>缺点：</h5><p><strong>可能丢数据</strong>：因为RDB只是不时地保存一次数据快照，如果在两次保存之间Redis出了问题，那中间的数据就可能会丢失。</p>
+<p><strong>有时会卡</strong>：在数据很多的情况下，创建 RDB 文件时可能会使服务器短暂地感觉有些卡顿。</p>
+<p><strong>卡顿的原因</strong>：尽管 Redis 使用写时复制（Copy-On-Write, COW）技术来减少内存的复制，fork( ) 在大数据集上的调用仍然可能相当耗时。这是因为操作系统需要为子进程准备一个与父进程相同的虚拟内存空间。在这个准备过程中，即使不立即复制物理内存，操作系统也需要复制和设置父进程的页表，这在数据集很大时会占用相当一部分时间。fork( ) 的执行时间与服务器上的数据量大小成正比。因此在数据集较大时，fork 可能会有比较久的延迟才能返回，所以才造成的卡顿。</p>
+<h3 id="AOF"><a href="#AOF" class="headerlink" title="AOF"></a>AOF</h3><h4 id="AOF是什么？"><a href="#AOF是什么？" class="headerlink" title="AOF是什么？"></a>AOF是什么？</h4><p>想象你正在写日记，每次有新的事件，你就写下来。AOF 就像是 Redis 的日记，记录了所有的写操作命令。</p>
+<h4 id="简单图解："><a href="#简单图解：" class="headerlink" title="简单图解："></a>简单图解：</h4><p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/images/RedisPersistence/3.png"></p>
+<h4 id="AOF-的工作原理"><a href="#AOF-的工作原理" class="headerlink" title="AOF 的工作原理"></a>AOF 的工作原理</h4><h5 id="基本机制和流程"><a href="#基本机制和流程" class="headerlink" title="基本机制和流程"></a>基本机制和流程</h5><p>Redis 中的 AOF 持久化方式旨在持续地保存服务器上的所有修改操作。每当执行一个会改变数据的命令时，Redis 都会将该命令写入 AOF 文件中。这样，当 Redis 需要恢复数据时，只需执行 AOF 文件中的命令就可以恢复到原来的状态。</p>
+<h5 id="AOF-文件的生成"><a href="#AOF-文件的生成" class="headerlink" title="AOF 文件的生成"></a>AOF 文件的生成</h5><h5 id="流程图"><a href="#流程图" class="headerlink" title="流程图"></a>流程图</h5><p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/images/RedisPersistence/4.png"></p>
+<p><strong>步骤说明：</strong></p>
+<p>AOF 持久化的实现主要是以上三步：<strong>命令追加、文件写入、文件同步</strong></p>
+<ul>
+<li><strong>命令追加</strong>: 将 redis 写操作命令追加到 aof_buf 缓冲区</li>
+<li><strong>文件写入</strong>: 周期性地将 aof_buf 缓冲区的命令写入 AOF 文件的内核缓冲区。</li>
+<li><strong>文件同步</strong>:根据配置同步策略，将 AOF 文件缓冲区的内容同步到磁盘。</li>
+</ul>
+<p>其中文件同步策略 redis 提供了三种，分别是以下三种：</p>
+<p><strong>always</strong>：每次有命令写入时都立即同步。这提供了最高的数据安全性，但效率最低。</p>
+<p><strong>everysec</strong>：每秒同步一次。这是一个权衡安全性和效率的策略。最多只丢失 1 秒 的数据</p>
+<p><strong>no</strong>：让操作系统决定最佳的同步时间。这可能导致数据丢失，但提供了最高的效率。</p>
+<h5 id="AOF-文件的载入"><a href="#AOF-文件的载入" class="headerlink" title="AOF 文件的载入"></a>AOF 文件的载入</h5><p>当 Redis 服务器启动时，如果配置为使用 AOF 持久化，它会检查 AOF 文件的存在。如果找到 AOF 文件，Redis 会加载并执行其中的命令来恢复数据的。</p>
+<p><strong>这里顺带提个问题</strong>：假如 Redis 的 RDB 和 AOF 持久化都启用，redis 在载入数据的时候，是载入 AOF 文件？还是 RDB 文件？</p>
+<p>我直接说答案：Redis 会优先载入 AOF 文件来恢复数据，而不是 RDB 文件。这是因为 AOF 文件通常包含了更完整的操作记录，从而能够恢复更完整的数据状态。而 RDB 文件是定时生成的数据快照，所以它可能没有记录到最后一次快照之后发生的所有更改。因此，使用 AOF 文件恢复数据可以提供更高的数据完整性。</p>
+<h4 id="AOF-重写"><a href="#AOF-重写" class="headerlink" title="AOF 重写"></a>AOF 重写</h4><p>在了解了 AOF 的工作原理之后，我们知道它是通过追加写操作命令到文件的方式来恢复数据的。但这会带来一个新的问题: 随着追加命令的不断增加，这个 AOF 文件可能会变得很大和冗长。面对这样的问题，Redis 提供了一个非常有效的优化手段，那就是 <strong>AOF 重写</strong>。</p>
+<p><strong>AOF重写是什么？</strong></p>
+<p>AOF 重写，可以看作是对 AOF文件 进行的一次“精简”操作。它的目的是减少AOF文件的大小，并去除那些冗余的、不再必要的命令，使得该文件只包含恢复当前数据集所需的最小命令集。</p>
+<p><strong>为什么需要AOF重写？</strong></p>
+<p><strong>节省磁盘空间</strong>：随着操作的积累，原始AOF文件可能会变得非常大。通过重写，我们可以减少文件的大小。</p>
+<p><strong>加速恢复速度</strong>：一个更小、更简洁的AOF文件意味着在Redis重启时，数据的恢复过程会更快。</p>
+<p><strong>AOF 重写流程图</strong>：</p>
+<p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/images/RedisPersistence/5.png"></p>
+<p><strong>步骤说明</strong>： </p>
+<p><strong>AOF 重写主要有以下四步：</strong></p>
+<ul>
+<li>redis 主进程 fork 子进程来进行 AOF 的重写，生成 AOF 文件。</li>
+<li>在子进程进行 AOF 重写的同时，redis 主进程将新的写操作命令写入 AOF重写缓冲区</li>
+<li>主进程将 AOF 重写缓冲区的内容写入到新的 AOF 文件中</li>
+<li>使用新的 AOF 文件替换旧的 AOF 文件</li>
+</ul>
+<p><strong>这里思考一下</strong>：子进程 进行 AOF 重写，具体怎么重写，是根据现有的 AOF 文件进行重写还是其他方式？</p>
+<p>子进程是通过读取 Redis 当前的内存数据来进行重写的。假如:  redis 数据库存在列表键 List &#x3D; [a,b,c,d,e,f,g,h] ，在旧的 AOF 文件中，可能有多个命令添加和删除这些元素。但在 AOF 重写时，子进程只需要看 List键 的当前状态，然后生成一个简短的命令，如 RPUSH List a b c d e f g h，直接设置正确的值，避免了任何冗余操作。</p>
+<h4 id="AOF-配置详解"><a href="#AOF-配置详解" class="headerlink" title="AOF 配置详解"></a>AOF 配置详解</h4><p>我们只需要在 Redis 配置文件 redis.conf 中搜索 APPEND ONLY MODE 即可搜到 AOF 配置项。</p>
+<p><strong>Q: 我想启用 AOF 模式，我应该怎么做？</strong></p>
+<p>A: 将 appendonly 设置为 yes。默认是 no。</p>
+<p><strong>Q: 我想改变 AOF 文件的名称，该怎么做？</strong></p>
+<p>A: 使用 appendfilename 选项。默认名称是 appendonly.aof。</p>
+<p><strong>Q: 有哪些方式可以控制 AOF 数据同步到磁盘的频率？</strong></p>
+<p>A: 使用 appendfsync 选项。你有三个选择：</p>
+<p><strong>always</strong>: 每次写操作后都同步。</p>
+<p><strong>everysec</strong>: 每秒同步一次。</p>
+<p><strong>no</strong>: 由操作系统决定何时同步。</p>
+<p>默认设置是 <strong>everysec</strong>。</p>
+<p><strong>Q: 当 Redis 进行 AOF 重写或快照保存时，我怎样避免主进程 fsync 的延迟？</strong></p>
+<p>A: 设置 no-appendfsync-on-rewrite 为 yes。默认是 no。</p>
+<p><strong>Q: 我怎样自动触发 AOF 文件重写？</strong></p>
+<p>A: 使用以下两个配置：</p>
+<p><strong>auto-aof-rewrite-percentage</strong>: AOF 文件增长的百分比，达到此值则触发 AOF 重写。例如，如果设置为100%，那么当 AOF 文件的大小是上次重写后的两倍时，Redis 会考虑触发自动重写。</p>
+<p><strong>auto-aof-rewrite-min-size</strong>: AOF 文件大小门槛，超过此值即使增长的百分比小也会触发 AOF 重写。</p>
+<p><strong>Q: 如果 AOF 文件在末尾被截断，Redis怎么办？</strong></p>
+<p>A: 使用 aof-load-truncated 选项。如果设置为 yes，Redis 尝试加载并启动，同时发出日志警告；如果为 no，Redis 会中止并拒绝启动。默认是 yes。</p>
+<h4 id="AOF-持久化的优缺点"><a href="#AOF-持久化的优缺点" class="headerlink" title="AOF 持久化的优缺点"></a>AOF 持久化的优缺点</h4><p><strong>优点</strong>：</p>
+<p><strong>不轻易丢数据</strong>：AOF 记录了所有的写操作，所以即使服务器突然断电，数据丢失的机会也很小。</p>
+<p><strong>易于理解</strong>：AOF是一个文本文件，里面就是一系列的命令，你可以打开查看。</p>
+<p><strong>出问题也能救</strong>：如果 AOF 文件最后有点损坏，Redis 也能够修复它，避免大量数据丢失。</p>
+<p><strong>缺点</strong>：</p>
+<p><strong>可能会慢一些</strong>：因为要不断写入操作，所以比 RDB 要慢一点。</p>
+<p><strong>文件可能很大</strong>：AOF 会记录所有操作，所以文件可能迅速增大，占用更多空间。</p>
+<p><strong>恢复时间长</strong>：如果需要从 AOF 文件中恢复数据，由于文件可能很大，所以这个过程可能会比较慢。</p>
+<h3 id="混合持久化"><a href="#混合持久化" class="headerlink" title="混合持久化"></a>混合持久化</h3><p>  回顾一下，我们已经探讨了 Redis 的 RDB 和 AOF 持久化。RDB 提供快速的数据恢复，但可能有数据丢失风险；AOF 保证了数据完整性，但文件可能过大，恢复速度较慢。那么，是否有一种既快速又可靠的方法？接下来，我们将介绍 Redis 的<strong>混合持久化策略</strong>。</p>
+<h4 id="混合持久化是什么？"><a href="#混合持久化是什么？" class="headerlink" title="混合持久化是什么？"></a>混合持久化是什么？</h4><p>混合持久化是 Redis 4.0 新引入的持久化策略，结合了 RDB 的快速恢复和 AOF 的数据完整性的优点，它首先以 RDB 格式保存当前数据状态，然后继续以 AOF 格式记录新的写操作，确保数据完整性并优化恢复速度。</p>
+<h4 id="简单图解"><a href="#简单图解" class="headerlink" title="简单图解"></a>简单图解</h4><p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/images/RedisPersistence/6.png"></p>
+<h4 id="混合持久化的工作原理"><a href="#混合持久化的工作原理" class="headerlink" title="混合持久化的工作原理"></a>混合持久化的工作原理</h4><p>在 AOF 重写之前，RDB 和 AOF 都是按照它们各自的持久化策略工作的。当 AOF 重写被触发时，混合持久化才开始发挥作用：将当前的数据集会首先以RDB 格式写入新 AOF 文件的顶部，然后再追加新的命令到文件的末尾。</p>
+<h5 id="混合持久化的工作流程图"><a href="#混合持久化的工作流程图" class="headerlink" title="混合持久化的工作流程图"></a>混合持久化的工作流程图</h5><p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/images/RedisPersistence/7.png"></p>
+<p><strong>步骤说明</strong>：</p>
+<p>混合持久化的实现主要是靠主进程和子进程共同来完成的。</p>
+<p><strong>子进程</strong>: </p>
+<p>   子进程进行 AOF 重写：</p>
+<ul>
+<li>首先创建新的 AOF 文件 appendonly.rdb</li>
+<li>将 Redis 当前的数据生成 RDB 快照写入 appendonly.rdb 文件的开始部分</li>
+</ul>
+<p><strong>主进程</strong></p>
+<ul>
+<li>主进程先将新的写操作命令写入 AOF 重写缓冲区<br>   -主进程将 AOF 重写缓冲区的内容追加到 appendonly.rdb<br>文件的 RDB 数据的末尾</li>
+<li>使用 appendonly.rdb 文件替换旧的 AOF 文件</li>
+</ul>
+<h4 id="混合持久化的配置"><a href="#混合持久化的配置" class="headerlink" title="混合持久化的配置"></a>混合持久化的配置</h4><p><strong>Q: Redis 的混合持久化如何开启？</strong></p>
+<p>A: 将 aof-use-rdb-preamble 选项设置为 yes，并且要同时启用 RDB 和 AOF 两种持久化。</p>
+<p><strong>混合持久化的 AOF 重写与普通的 AOF 重写的区别</strong>：</p>
+<p>在不使用混合持久化的情况下，普通的 AOF 重写是通过读取当前的内存数据并记录达到这一状态所需的最少命令来减少 AOF 文件的大小的。</p>
+<p>而混合持久化在 AOF 重写时，会首先将当前数据集以 RDB 格式快照的形式写入新 AOF 文件的开始位置，然后再追加新的写命令到文件末尾。</p>
+<h4 id="混合持久化的优缺点"><a href="#混合持久化的优缺点" class="headerlink" title="混合持久化的优缺点"></a>混合持久化的优缺点</h4><p><strong>优点</strong>：</p>
+<p><strong>更快的启动速度</strong>：混合持久化结合了RDB的速度优势，所以Redis可以更快地重新启动，不用等待很久。</p>
+<p><strong>数据安全</strong>：利用AOF的方式，即使服务器突然断电，也只会丢失极短的时间内的数据。</p>
+<p><strong>文件更小巧</strong>：因为混合持久化结合了 RDB 和 AOF 的优势，所以文件大小和冗余度都可以得到控制。</p>
+<p><strong>两全其美</strong>：简单说，它就是RDB和AOF的结合体，带来了两者的好处。</p>
+<p><strong>缺点</strong>：</p>
+<p><strong>稍微复杂</strong>：因为它结合了两种技术，所以处理起来比单一的 RDB 或 AOF 要复杂一点。</p>
+<p><strong>可能占更多空间</strong>：在某些情况下，保存数据的文件可能会比只使用 RDB 或AOF 的文件要大一些。</p>
+<p><strong>写入速度</strong>：可能会稍慢一些，特别是当数据需要经常被保存到硬盘时（比如当 appendfsync 配置为“always”时）</p>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>在本系列文章中，我们深入探讨了 Redis 的持久化机制。通过详细介绍 RDB、AOF 以及混合持久化这三种主流的持久化方法，我们不仅学习了它们各自的工作机制和配置策略，还探讨了它们的优缺点，以帮助读者根据自己的实际需求选出合适的持久化方式。</p>
+<ul>
+<li>RDB 持久化以其高效的数据恢复速度和较小的性能开销脱颖而出，适合数据备份和灾难恢复场景。</li>
+<li>AOF 持久化通过记录每个写操作确保了更高级别的数据安全性，尽管它可能导致文件体积增大和写入性能的轻微下降。</li>
+<li>混合持久化模式结合了 RDB 的快速数据恢复能力和 AOF 的数据安全性，提供了一种既快速又可靠的数据恢复解决方案。</li>
+</ul>
+<p>所以大家在选择持久化策略时，需要考虑到数据安全性、恢复速度、以及系统性能三者之间的平衡。RDB 适合需要定期备份的场景，AOF 适合对数据丢失有严格要求的应用，而混合持久化模式则是一种比较折中的方案，它结合了 RDB 的快速数据恢复能力和 AOF 的数据安全性。</p>
+<p><strong>这里我又将 Redis 的三种持久化方式的优缺点以及使用场景做了详细的对比</strong>:</p>
+<table>
+<thead>
+<tr>
+<th align="left">持久化方式</th>
+<th align="center">优点</th>
+<th align="right">缺点</th>
+<th align="right">使用场景</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">RDB</td>
+<td align="center">1. 生成文件速度快。2. 恢复数据速度快。3. 磁盘空间占用少。</td>
+<td align="right">1. 数据丢失风险。2. 快照操作可能的性能下降。</td>
+<td align="right">1. 数据备份。2. 数据迁移。3. 灾难恢复时的快速数据恢复。</td>
+</tr>
+<tr>
+<td align="left">AOF</td>
+<td align="center">1. 提供更高的数据安全性。2. 记录实际操作命令（可读性好）。3. 可以自定义保存频率。</td>
+<td align="right">1. 文件可能较大。2. 数据恢复速度较慢。</td>
+<td align="right">数据安全性要求高的场合</td>
+</tr>
+<tr>
+<td align="left">混合持久化</td>
+<td align="center">提供了数据安全和更快的数据恢复速度。</td>
+<td align="right">维护两种文件格式，增加磁盘占用空间。</td>
+<td align="right">快速的数据恢复和高数据安全性的场景。</td>
+</tr>
+</tbody></table>
+<h3 id="最后"><a href="#最后" class="headerlink" title="最后"></a>最后</h3><p>如果你对 Linux C&#x2F;C++ 编程，Redis 等后端技术感兴趣或者想学习计算机原理相关的知识，不妨关注我的公众号<strong>「跟着小康学编程」</strong>。这里会持续更新的简单易懂的技术文章，还有常见的技术面试题等等。</p>
+<p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/images/%E8%81%94%E7%B3%BB%E6%88%91/xkvxgzh.png"></p>
+<p>另外，小康最近创建了一个技术交流群，专门用来探讨技术相关或者解答读者的问题。大家在阅读这篇文章的时候，如果觉得有问题的或者有不理解的知识点，欢迎大家加群询问。我能够解决的，尽量给大家回复。</p>
+<p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/images/%E8%81%94%E7%B3%BB%E6%88%91/grvx.png"></p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="http://example.com">小康</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="http://example.com/RedisPersistence/">http://example.com/RedisPersistence/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="http://example.com" target="_blank">跟着小康学编程</a>！</span></div></div><!-- 添加赞赏二维码--><div class="reward-container" style="text-align: center; margin-top: 20px;"><div class="reward-item" style="display: inline-block; margin: 10px;"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/wechat.jpg" alt="请作者喝咖啡" style="width: 150px; height: 150px;"><div>请作者喝咖啡</div></div></div><div class="tag_share"><div class="post-meta__tag-list"></div><div class="post_share"><div class="social-share" data-image="/img/me.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.3/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.3/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/RedisCluster/" title=""><div class="cover" style="background: var(--default-bg-color)"></div><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info"></div></div></a></div><div class="next-post pull-right"><a href="/RedisObject/" title=""><div class="cover" style="background: var(--default-bg-color)"></div><div class="pagination-info"><div class="label">下一篇</div><div class="next_info"></div></div></a></div></nav><hr class="custom-hr"/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div class="vcomment" id="vcomment"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/me.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">小康</div><div class="author-info__description">一枚努力的程序猿</div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">15</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">36</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">16</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xxxxxx"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">This is my Blog</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Redis-%E6%8C%81%E4%B9%85%E5%8C%96"><span class="toc-number">1.</span> <span class="toc-text">Redis 持久化</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Redis%E4%B8%8E%E5%86%85%E5%AD%98%E6%95%B0%E6%8D%AE%E5%BA%93%E7%9A%84%E7%89%B9%E6%80%A7"><span class="toc-number">1.1.</span> <span class="toc-text">Redis与内存数据库的特性</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88Redis%E6%98%AF%E5%86%85%E5%AD%98%E6%95%B0%E6%8D%AE%E5%BA%93%EF%BC%9F"><span class="toc-number">1.1.1.</span> <span class="toc-text">为什么Redis是内存数据库？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%86%85%E5%AD%98%E6%95%B0%E6%8D%AE%E5%BA%93%E7%9A%84%E4%BC%98%E7%82%B9%E5%92%8C%E7%BC%BA%E7%82%B9"><span class="toc-number">1.1.2.</span> <span class="toc-text">内存数据库的优点和缺点</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BB%80%E4%B9%88%E6%98%AF%E6%8C%81%E4%B9%85%E5%8C%96"><span class="toc-number">1.2.</span> <span class="toc-text">什么是持久化</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Redis-%E6%8C%81%E4%B9%85%E5%8C%96%E7%9A%84%E6%96%B9%E5%BC%8F"><span class="toc-number">1.3.</span> <span class="toc-text">Redis 持久化的方式</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#RDB"><span class="toc-number">1.3.1.</span> <span class="toc-text">RDB</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#RDB%E6%98%AF%E4%BB%80%E4%B9%88%EF%BC%9F"><span class="toc-number">1.3.1.1.</span> <span class="toc-text">RDB是什么？</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#RDB-%E7%94%9F%E6%88%90%E5%9B%BE%E8%A7%A3"><span class="toc-number">1.3.1.2.</span> <span class="toc-text">RDB 生成图解</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#RDB-%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86"><span class="toc-number">1.3.1.3.</span> <span class="toc-text">RDB 工作原理</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#RDB-%E7%94%9F%E6%88%90%E7%9A%84%E6%B5%81%E7%A8%8B%E5%9B%BE"><span class="toc-number">1.3.1.3.1.</span> <span class="toc-text">RDB 生成的流程图</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#RDB-%E7%9A%84%E8%BD%BD%E5%85%A5"><span class="toc-number">1.3.1.3.2.</span> <span class="toc-text">RDB 的载入</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#RDB-%E9%85%8D%E7%BD%AE%E8%AF%A6%E8%A7%A3"><span class="toc-number">1.3.1.4.</span> <span class="toc-text">RDB 配置详解</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#RDB-%E6%8C%81%E4%B9%85%E5%8C%96%E7%9A%84%E4%BC%98%E7%BC%BA%E7%82%B9"><span class="toc-number">1.3.1.5.</span> <span class="toc-text">RDB 持久化的优缺点</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E4%BC%98%E7%82%B9"><span class="toc-number">1.3.1.5.1.</span> <span class="toc-text">优点</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E7%BC%BA%E7%82%B9%EF%BC%9A"><span class="toc-number">1.3.1.5.2.</span> <span class="toc-text">缺点：</span></a></li></ol></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#AOF"><span class="toc-number">1.3.2.</span> <span class="toc-text">AOF</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#AOF%E6%98%AF%E4%BB%80%E4%B9%88%EF%BC%9F"><span class="toc-number">1.3.2.1.</span> <span class="toc-text">AOF是什么？</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%AE%80%E5%8D%95%E5%9B%BE%E8%A7%A3%EF%BC%9A"><span class="toc-number">1.3.2.2.</span> <span class="toc-text">简单图解：</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#AOF-%E7%9A%84%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86"><span class="toc-number">1.3.2.3.</span> <span class="toc-text">AOF 的工作原理</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%9F%BA%E6%9C%AC%E6%9C%BA%E5%88%B6%E5%92%8C%E6%B5%81%E7%A8%8B"><span class="toc-number">1.3.2.3.1.</span> <span class="toc-text">基本机制和流程</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#AOF-%E6%96%87%E4%BB%B6%E7%9A%84%E7%94%9F%E6%88%90"><span class="toc-number">1.3.2.3.2.</span> <span class="toc-text">AOF 文件的生成</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E6%B5%81%E7%A8%8B%E5%9B%BE"><span class="toc-number">1.3.2.3.3.</span> <span class="toc-text">流程图</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#AOF-%E6%96%87%E4%BB%B6%E7%9A%84%E8%BD%BD%E5%85%A5"><span class="toc-number">1.3.2.3.4.</span> <span class="toc-text">AOF 文件的载入</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#AOF-%E9%87%8D%E5%86%99"><span class="toc-number">1.3.2.4.</span> <span class="toc-text">AOF 重写</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#AOF-%E9%85%8D%E7%BD%AE%E8%AF%A6%E8%A7%A3"><span class="toc-number">1.3.2.5.</span> <span class="toc-text">AOF 配置详解</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#AOF-%E6%8C%81%E4%B9%85%E5%8C%96%E7%9A%84%E4%BC%98%E7%BC%BA%E7%82%B9"><span class="toc-number">1.3.2.6.</span> <span class="toc-text">AOF 持久化的优缺点</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%B7%B7%E5%90%88%E6%8C%81%E4%B9%85%E5%8C%96"><span class="toc-number">1.3.3.</span> <span class="toc-text">混合持久化</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%B7%B7%E5%90%88%E6%8C%81%E4%B9%85%E5%8C%96%E6%98%AF%E4%BB%80%E4%B9%88%EF%BC%9F"><span class="toc-number">1.3.3.1.</span> <span class="toc-text">混合持久化是什么？</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%AE%80%E5%8D%95%E5%9B%BE%E8%A7%A3"><span class="toc-number">1.3.3.2.</span> <span class="toc-text">简单图解</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%B7%B7%E5%90%88%E6%8C%81%E4%B9%85%E5%8C%96%E7%9A%84%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86"><span class="toc-number">1.3.3.3.</span> <span class="toc-text">混合持久化的工作原理</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E6%B7%B7%E5%90%88%E6%8C%81%E4%B9%85%E5%8C%96%E7%9A%84%E5%B7%A5%E4%BD%9C%E6%B5%81%E7%A8%8B%E5%9B%BE"><span class="toc-number">1.3.3.3.1.</span> <span class="toc-text">混合持久化的工作流程图</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%B7%B7%E5%90%88%E6%8C%81%E4%B9%85%E5%8C%96%E7%9A%84%E9%85%8D%E7%BD%AE"><span class="toc-number">1.3.3.4.</span> <span class="toc-text">混合持久化的配置</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%B7%B7%E5%90%88%E6%8C%81%E4%B9%85%E5%8C%96%E7%9A%84%E4%BC%98%E7%BC%BA%E7%82%B9"><span class="toc-number">1.3.3.5.</span> <span class="toc-text">混合持久化的优缺点</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%80%BB%E7%BB%93"><span class="toc-number">1.3.4.</span> <span class="toc-text">总结</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9C%80%E5%90%8E"><span class="toc-number">1.3.5.</span> <span class="toc-text">最后</span></a></li></ol></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/RedisCluster/" title="无题">无题</a><time datetime="2024-04-30T06:29:21.248Z" title="发表于 2024-04-30 14:29:21">2024-04-30</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/RedisPersistence/" title="无题">无题</a><time datetime="2024-04-30T03:34:53.707Z" title="发表于 2024-04-30 11:34:53">2024-04-30</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/RedisObject/" title="无题">无题</a><time datetime="2024-04-30T01:51:28.581Z" title="发表于 2024-04-30 09:51:28">2024-04-30</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/LinuxCmd/" title="Linux 命令入门指南：快速掌握基础命令">Linux 命令入门指南：快速掌握基础命令</a><time datetime="2024-04-29T03:16:29.040Z" title="发表于 2024-04-29 11:16:29">2024-04-29</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/techbooks/" title="必读：2024年度最佳计算机编程书籍推荐">必读：2024年度最佳计算机编程书籍推荐</a><time datetime="2024-04-28T10:04:54.216Z" title="发表于 2024-04-28 18:04:54">2024-04-28</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2024 By 小康</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="直达评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=4.13.0"></script><script src="/js/main.js?v=4.13.0"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.33/dist/fancybox/fancybox.umd.min.js"></script><script src="https://cdn.jsdelivr.net/npm/vanilla-lazyload@17.8.8/dist/lazyload.iife.min.js"></script><div class="js-pjax"><script>(() => {
+  const initValine = () => {
+    const valine = new Valine(Object.assign({
+      el: '#vcomment',
+      appId: 'yNXYnuxkePack1IfO9FTTxA9-gzGzoHsz',
+      appKey: 'bs6gdkXWDYvN826BUX5Xl53U',
+      avatar: 'monsterid',
+      serverURLs: 'https://ynxynuxk.lc-cn-n1-shared.com',
+      emojiMaps: "",
+      path: window.location.pathname,
+      visitor: true
+    }, null))
+  }
+
+  const loadValine = async () => {
+    if (typeof Valine === 'function') initValine()
+    else {
+      await getScript('https://cdn.jsdelivr.net/npm/valine@1.5.1/dist/Valine.min.js')
+      initValine()
+    }
+  }
+
+  if ('Valine' === 'Valine' || !true) {
+    if (true) btf.loadComment(document.getElementById('vcomment'),loadValine)
+    else setTimeout(loadValine, 0)
+  } else {
+    window.loadOtherComment = loadValine
+  }
+})()</script></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="is-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据库加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div><hr/><div id="local-search-results"></div><div id="local-search-stats-wrap"></div></div></div><div id="search-mask"></div><script src="/js/search/local-search.js?v=4.13.0"></script></div></div></body></html>
