@@ -43,9 +43,6 @@ document.addEventListener('DOMContentLoaded', function () {
     }
   }
 
-document.querySelector('.fa-weixin').addEventListener('click', function() {
-  document.getElementById('wechat-qr').style.display = 'block';
-});
 
 
   /**
