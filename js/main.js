@@ -43,6 +43,11 @@ document.addEventListener('DOMContentLoaded', function () {
     }
   }
 
+document.querySelector('.fa-weixin').addEventListener('click', function() {
+  document.getElementById('wechat-qr').style.display = 'block';
+});
+
+
   /**
    * 首頁top_img底下的箭頭
    */
