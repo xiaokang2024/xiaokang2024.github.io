@@ -1,8 +1,8 @@
 @font-face {
   font-family: "iconfont"; /* Project id 4532312 */
-  src: url('iconfont.woff2?t=1714741418502') format('woff2'),
-       url('iconfont.woff?t=1714741418502') format('woff'),
-       url('iconfont.ttf?t=1714741418502') format('truetype');
+  src: url('iconfont.woff2?t=1714727475351') format('woff2'),
+       url('iconfont.woff?t=1714727475351') format('woff'),
+       url('iconfont.ttf?t=1714727475351') format('truetype');
 }
 
 .iconfont {
@@ -13,10 +13,6 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-.icon-weixingongzhonghao:before {
-  content: "\e67e";
-}
-
 .icon-weixin:before {
   content: "\e620";
 }
@@ -25,3 +21,6 @@
   content: "\e601";
 }
 
+.icon-weixingongzhonghao:before {
+  content: "\e67e";
+}
