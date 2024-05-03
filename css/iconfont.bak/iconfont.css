@@ -18,3 +18,7 @@
   color: #0084ff;
 }
 
+.icon-weixingongzhonghao:before {
+  content: "\e67e";
+}
+
