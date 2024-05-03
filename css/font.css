@@ -1,8 +1,8 @@
 @font-face {
   font-family: "iconfont"; /* Project id 4532312 */
-  src: url('//at.alicdn.com/t/c/font_4532312_v0jy0wdmv6.woff2?t=1714700665629') format('woff2'),
-       url('//at.alicdn.com/t/c/font_4532312_v0jy0wdmv6.woff?t=1714700665629') format('woff'),
-       url('//at.alicdn.com/t/c/font_4532312_v0jy0wdmv6.ttf?t=1714700665629') format('truetype');
+  src: url('//at.alicdn.com/t/c/font_4532312_cj27des1ek5.woff2?t=1714711229798') format('woff2'),
+       url('//at.alicdn.com/t/c/font_4532312_cj27des1ek5.woff?t=1714711229798') format('woff'),
+       url('//at.alicdn.com/t/c/font_4532312_cj27des1ek5.ttf?t=1714711229798') format('truetype');
 }
 
 .iconfont {
@@ -13,6 +13,7 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-.icon-weixintubiao:before {
-  content: "\e739";
+.icon-github:before {
+  content: "\e7ab";
 }
+
