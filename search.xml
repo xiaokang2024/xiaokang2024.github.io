@@ -4,6 +4,35 @@
   
     
     <entry>
+      <title>HTTP 面试题 — HTTP 常用的状态码有哪些？分别的使用场景？</title>
+      <link href="/httpCode/"/>
+      <url>/httpCode/</url>
+      
+        <content type="html"><![CDATA[<p>🚀 大家好，我是小康。</p><p>今天给大家分享一个 HTTP 面试题 ：<strong>GET 的长度限制是多少？</strong></p><blockquote><p><strong>小技巧</strong>：在面试中，可以参考下面的<strong>示例回答</strong>，这样回答简洁明了。<strong>详细介绍</strong>部分则是为了帮助大家系统学习，以便应对面试官深入提问。</p></blockquote><h3 id="示例回答："><a href="#示例回答：" class="headerlink" title="示例回答："></a>示例回答：</h3><p>常用的 HTTP 状态码有：</p><ul><li><strong>200 OK</strong>：请求成功，返回所请求的资源。</li><li><strong>301 Moved Permanently</strong>：资源永久移动到新位置。</li><li><strong>302 Found</strong>：资源临时移动到新位置。</li><li><strong>400 Bad Request</strong>：请求无效，服务器无法理解请求。</li><li><strong>401 Unauthorized</strong>：未授权，需提供认证。</li><li><strong>403 Forbidden</strong>：服务器拒绝请求。</li><li><strong>404 Not Found</strong>：资源未找到。</li><li><strong>500 Internal Server Error</strong>：服务器内部错误。</li></ul><hr><h3 id="详细介绍"><a href="#详细介绍" class="headerlink" title="详细介绍"></a>详细介绍</h3><h4 id="1-200-OK"><a href="#1-200-OK" class="headerlink" title="1. 200 OK"></a>1. 200 OK</h4><ul><li><strong>含义</strong>：请求成功，服务器已成功处理请求。</li><li><strong>使用场景</strong>：访问网页、获取 API 数据成功时返回。</li><li><strong>示例</strong>：用户请求某个网页，服务器成功返回该网页内容。</li></ul><h4 id="2-301-Moved-Permanently"><a href="#2-301-Moved-Permanently" class="headerlink" title="2. 301 Moved Permanently"></a>2. 301 Moved Permanently</h4><ul><li><strong>含义</strong>：请求的资源已永久移动到新位置。</li><li><strong>使用场景</strong>：资源永久重定向，SEO 优化时常用。</li><li><strong>示例</strong>：网站改版，旧 URL 重定向到新 URL。</li></ul><h4 id="3-302-Found"><a href="#3-302-Found" class="headerlink" title="3. 302 Found"></a>3. 302 Found</h4><ul><li><strong>含义</strong>：请求的资源临时移动到新位置。</li><li><strong>使用场景</strong>：资源临时重定向，不应被缓存。</li><li><strong>示例</strong>：用户登录后重定向到主页。</li></ul><h4 id="4-400-Bad-Request"><a href="#4-400-Bad-Request" class="headerlink" title="4. 400 Bad Request"></a>4. 400 Bad Request</h4><ul><li><strong>含义</strong>：请求无效，服务器无法理解请求。</li><li><strong>使用场景</strong>：客户端发送的请求有语法错误。</li><li><strong>示例</strong>：用户提交的表单数据格式不正确。</li></ul><h4 id="5-401-Unauthorized"><a href="#5-401-Unauthorized" class="headerlink" title="5. 401 Unauthorized"></a>5. 401 Unauthorized</h4><ul><li><strong>含义</strong>：未授权，需提供身份认证。</li><li><strong>使用场景</strong>：用户未登录或认证信息无效。</li><li><strong>示例</strong>：用户访问受保护的资源但未登录。</li></ul><h4 id="6-403-Forbidden"><a href="#6-403-Forbidden" class="headerlink" title="6. 403 Forbidden"></a>6. 403 Forbidden</h4><ul><li><strong>含义</strong>：服务器拒绝请求，权限不足。</li><li><strong>使用场景</strong>：用户权限不足以访问某资源。</li><li><strong>示例</strong>：普通用户尝试访问管理员页面。</li></ul><h4 id="7-404-Not-Found"><a href="#7-404-Not-Found" class="headerlink" title="7. 404 Not Found"></a>7. 404 Not Found</h4><ul><li><strong>含义</strong>：请求的资源未找到。</li><li><strong>使用场景</strong>：用户请求的页面不存在或 URL 错误。</li><li><strong>示例</strong>：用户访问不存在的网页 URL。</li></ul><h4 id="8-500-Internal-Server-Error"><a href="#8-500-Internal-Server-Error" class="headerlink" title="8. 500 Internal Server Error"></a>8. 500 Internal Server Error</h4><ul><li><strong>含义</strong>：服务器内部错误，无法完成请求。</li><li><strong>使用场景</strong>：服务器代码或配置出错导致无法处理请求。</li><li><strong>示例</strong>：服务器程序抛出异常未被捕获。</li></ul><h4 id="状态码分类"><a href="#状态码分类" class="headerlink" title="状态码分类"></a>状态码分类</h4><ul><li><strong>1xx Informational</strong>：信息性状态码，表示接收到请求并继续处理。</li><li><strong>2xx Success</strong>：成功状态码，表示请求已成功处理。</li><li><strong>3xx Redirection</strong>：重定向状态码，表示资源已移动，需客户端进一步操作。</li><li><strong>4xx Client Error</strong>：客户端错误状态码，表示请求有错误或权限问题。</li><li><strong>5xx Server Error</strong>：服务器错误状态码，表示服务器处理请求时出错。</li></ul><h2 id="最后"><a href="#最后" class="headerlink" title="最后:"></a>最后:</h2><p>欢迎大家关注我的微信公众号「<strong>跟着小康学编程</strong>」！本号致力于分享<strong>C&#x2F;C++&#x2F;Go&#x2F;Java 语言学习、计算机基础原理、Linux 编程、数据库、微服务、容器技术</strong> 等内容。文章力求通俗易懂，并配有代码示例，方便初学者理解。如果您对这些内容感兴趣，欢迎关注我的公众号「<strong>跟着小康学编程</strong>」。</p><p>后续，我还会陆续分享各个方向的编程面试题，包括<strong>C&#x2F;C++、Java、Go，以及操作系统、计算机网络、数据结构、数据库和微服务</strong>等领域，为大家的面试提供帮助。</p><p><img src="/images/%E8%81%94%E7%B3%BB%E6%88%91/xkvxgzh.png"></p><p>此外，小康最近创建了一个技术交流群，专门用来讨论技术问题和解答读者的疑问。在阅读文章时，如果有不理解的知识点，欢迎大家加入交流群提问。我会尽力为大家解答。期待与大家共同进步！</p><p><img src="/images/%E8%81%94%E7%B3%BB%E6%88%91/grvx.png"></p>]]></content>
+      
+      
+      <categories>
+          
+          <category> 编程 </category>
+          
+          <category> 计算机网络面试 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> HTTP </tag>
+            
+            <tag> 计算机网络面试 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>HTTP 面试题 — GET 的长度限制是多少？</title>
       <link href="/get-len/"/>
       <url>/get-len/</url>
