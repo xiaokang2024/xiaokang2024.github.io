@@ -4,7 +4,7 @@
   
     
     <entry>
-      <title>HTTP 面试题 — URI 和 URL 有什么区别?</title>
+      <title>HTTP 面试题 — 在交互过程中如果数据传送完了，还不想断开连接怎么办，怎么维持？</title>
       <link href="/keep-alive/"/>
       <url>/keep-alive/</url>
       
@@ -120,7 +120,7 @@
     
     
     <entry>
-      <title>HTTP 面试题 — URI 和 URL 有什么区别?</title>
+      <title>HTTP 面试题 — HTTPS 的优缺点？</title>
       <link href="/https-goodbad/"/>
       <url>/https-goodbad/</url>
       
