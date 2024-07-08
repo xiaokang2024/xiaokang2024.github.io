@@ -294,35 +294,6 @@
     
     
     <entry>
-      <title>HTTP 面试题 — URI 和 URL 有什么区别?</title>
-      <link href="/url-uri%20-%20%E5%89%AF%E6%9C%AC/"/>
-      <url>/url-uri%20-%20%E5%89%AF%E6%9C%AC/</url>
-      
-        <content type="html"><![CDATA[<p>🚀 大家好，我是小康。</p><p>今天给大家分享一个 HTTP 面试题 ：<strong>URI 和 URL 有什么区别?</strong></p><blockquote><p><strong>小技巧</strong>：在面试中，可以参考下面的<strong>示例回答</strong>，这样回答简洁明了。<strong>详细介绍</strong>部分则是为了帮助大家系统学习，以便应对面试官深入提问。</p></blockquote><h3 id="示例回答："><a href="#示例回答：" class="headerlink" title="示例回答："></a>示例回答：</h3><p>URI 是统一资源标识符，用于标识任何资源。URL 是统一资源定位符，是 URI 的一种，用于提供资源的访问方法。简单来说，所有的 URL 都是 URI，但不是所有的 URI 都是 URL。</p><hr><h3 id="详细介绍："><a href="#详细介绍：" class="headerlink" title="详细介绍："></a>详细介绍：</h3><h4 id="1-URI（Uniform-Resource-Identifier）"><a href="#1-URI（Uniform-Resource-Identifier）" class="headerlink" title="1. URI（Uniform Resource Identifier）"></a>1. URI（Uniform Resource Identifier）</h4><p><strong>定义</strong>：URI 是统一资源标识符，用于标识互联网中的某个资源。<br>URI 可以分为两种类型：</p><ul><li><strong>URL（Uniform Resource Locator）</strong>：统一资源定位符，指定了资源的位置和访问方法。</li><li><strong>URN（Uniform Resource Name）</strong>：统一资源名称，标识资源的名称，具有唯一性，但不指定资源的位置。</li></ul><h4 id="2-URL（Uniform-Resource-Locator）"><a href="#2-URL（Uniform-Resource-Locator）" class="headerlink" title="2. URL（Uniform Resource Locator）"></a>2. URL（Uniform Resource Locator）</h4><p><strong>定义</strong>：URL 是统一资源定位符，是 URI 的一种，提供了资源的访问方法和位置。<br><strong>结构</strong>：通常包括协议（如 http、https）、域名、端口、路径等。</p><ul><li>示例：<a href="http://www.example.com/index.html">http://www.example.com/index.html</a></li><li>解释：这个 URL 指定了使用 HTTP 协议，通过 <a href="http://www.example.com/">www.example.com</a> 域名访问服务器上的 index.html 文件。</li></ul><h4 id="3-主要区别"><a href="#3-主要区别" class="headerlink" title="3. 主要区别"></a>3. 主要区别</h4><p><strong>标识 vs 定位</strong>：</p><ul><li><strong>URI</strong>：侧重于标识资源，包含 URL 和 URN。</li><li><strong>URL</strong>：侧重于定位资源，提供访问资源的方法和位置。</li></ul><p><strong>包含关系</strong>：</p><ul><li><strong>URI 包含 URL</strong>：所有的 URL 都是 URI，因为 URL 提供了资源的标识和访问方法。</li><li><strong>URI 不等于 URL</strong>：URI 可以是 URN，不提供资源的位置。</li></ul><h4 id="4-实际应用"><a href="#4-实际应用" class="headerlink" title="4. 实际应用"></a>4. 实际应用</h4><ul><li><strong>URI</strong>：任何需要唯一标识资源的场景都可以使用 URI，例如：urn:isbn:0451450523（一本书的唯一标识）。</li><li><strong>URL</strong>：任何需要访问资源的场景都使用 URL，例如：<a href="http://www.example.com(访问网站首页)./">http://www.example.com（访问网站首页）。</a></li></ul><p>​</p><h2 id="最后"><a href="#最后" class="headerlink" title="最后:"></a>最后:</h2><p>欢迎大家关注我的微信公众号「<strong>跟着小康学编程</strong>」！本号致力于分享<strong>C&#x2F;C++&#x2F;Go&#x2F;Java 语言学习、计算机基础原理、Linux 编程、数据库、微服务、容器技术</strong> 等内容。文章力求通俗易懂，并配有代码示例，方便初学者理解。如果您对这些内容感兴趣，欢迎关注我的公众号「<strong>跟着小康学编程</strong>」。</p><p>后续，我还会陆续分享各个方向的编程面试题，包括<strong>C&#x2F;C++、Java、Go，以及操作系统、计算机网络、数据结构、数据库和微服务</strong>等领域，为大家的面试提供帮助。</p><p><img src="/images/%E8%81%94%E7%B3%BB%E6%88%91/xkvxgzh.png"></p><p>此外，小康最近创建了一个技术交流群，专门用来讨论技术问题和解答读者的疑问。在阅读文章时，如果有不理解的知识点，欢迎大家加入交流群提问。我会尽力为大家解答。期待与大家共同进步！</p><p><img src="/images/%E8%81%94%E7%B3%BB%E6%88%91/grvx.png"></p>]]></content>
-      
-      
-      <categories>
-          
-          <category> 编程 </category>
-          
-          <category> 计算机网络面试 </category>
-          
-      </categories>
-      
-      
-        <tags>
-            
-            <tag> HTTP </tag>
-            
-            <tag> 计算机网络面试 </tag>
-            
-        </tags>
-      
-    </entry>
-    
-    
-    
-    <entry>
       <title>HTTP 面试题 — GET请求中URL编码的意义？</title>
       <link href="/url-encode/"/>
       <url>/url-encode/</url>
