@@ -4,6 +4,35 @@
   
     
     <entry>
+      <title>TCP 面试题 — 三次握手中每一次没收到报文会发生什么情况？</title>
+      <link href="/tcp-three-handshake-detail-2/"/>
+      <url>/tcp-three-handshake-detail-2/</url>
+      
+        <content type="html"><![CDATA[<p>🚀 大家好，我是小康。</p><p>今天给大家分享一个 TCP 面试题 ：<strong>三次握手中每一次没收到报文会发生什么情况？</strong></p><blockquote><p><strong>小技巧</strong>：在面试中，可以参考下面的<strong>示例回答</strong>，这样回答简洁明了。<strong>详细介绍</strong>部分则是为了帮助大家系统学习，以便应对面试官深入提问。</p></blockquote><h3 id="示例回答："><a href="#示例回答：" class="headerlink" title="示例回答："></a>示例回答：</h3><p>如果三次握手中的任何一个报文没有被收到，TCP 将触发超时重传机制。具体来说，如果客户端没收到 SYN-ACK 或 ACK 包，或服务器没收到 SYN 包 或 ACK 包，它们都会重传未确认的报文，直到确认连接建立或放弃。</p><hr><h3 id="详细解释"><a href="#详细解释" class="headerlink" title="详细解释"></a>详细解释</h3><h4 id="三次握手中每一次没收到报文会发生什么情况"><a href="#三次握手中每一次没收到报文会发生什么情况" class="headerlink" title="三次握手中每一次没收到报文会发生什么情况"></a>三次握手中每一次没收到报文会发生什么情况</h4><p><strong>第一次握手：客户端发送 SYN 包</strong></p><ul><li><strong>情况</strong>：服务器没收到 SYN 包</li><li><strong>解释</strong>：如果服务器没收到客户端的 SYN 包，客户端会等待一段时间后重传 SYN 包。客户端会继续重传 SYN 包直到收到服务器的 SYN-ACK 包或达到重传次数上限。</li><li><strong>类比</strong>：你向朋友挥手示意，但朋友没看到，你会再次挥手，直到朋友回应或你放弃。</li><li><strong>示例</strong>：客户端发送 SYN 包，等待一段时间没收到回应，再次发送 SYN 包。</li></ul><p><strong>第二次握手：服务器发送 SYN-ACK 包</strong></p><ul><li><strong>情况</strong>：客户端没收到 SYN-ACK 包</li><li><strong>解释</strong>：如果客户端没收到服务器的 SYN-ACK 包，客户端会认为 SYN 包丢失，再次发送 SYN 包。服务器收到重复的 SYN 包后，会重传 SYN-ACK 包，直到客户端收到为止。</li><li><strong>类比</strong>：朋友向你挥手回应，但你没看到，朋友会继续挥手，直到你看到并回应。</li><li><strong>示例</strong>：服务器发送 SYN-ACK 包，客户端没收到，再次发送 SYN 包，服务器重传 SYN-ACK 包。</li></ul><p><strong>第三次握手：客户端发送 ACK 包</strong></p><ul><li><strong>情况</strong>：服务器没收到 ACK 包</li><li><strong>解释</strong>：如果服务器没收到客户端的 ACK 包，服务器会重传 SYN-ACK 包，客户端收到重复的 SYN-ACK 包后，会重传 ACK 包。这个过程会重复，直到服务器收到 ACK 包或达到重传次数上限。</li><li><strong>类比</strong>：你向朋友点头确认，但朋友没看到，他会继续挥手示意，直到你再次点头确认。</li><li><strong>示例</strong>：客户端发送 ACK 包，服务器没收到，服务器重传 SYN-ACK 包，客户端重传 ACK 包。</li></ul><h3 id="关键点总结"><a href="#关键点总结" class="headerlink" title="关键点总结"></a>关键点总结</h3><ul><li><strong>第一次握手（客户端发送 SYN 包）</strong>：如果服务器没收到，客户端重传 SYN 包。</li><li><strong>第二次握手（服务器发送 SYN-ACK 包）</strong>：如果客户端没收到，客户端重传 SYN 包，服务器重传 SYN-ACK 包。</li><li><strong>第三次握手（客户端发送 ACK 包）</strong>：如果服务器没收到，服务器重传 SYN-ACK 包，客户端重传 ACK 包。</li></ul><h2 id="最后"><a href="#最后" class="headerlink" title="最后:"></a>最后:</h2><p>欢迎大家关注我的微信公众号「<strong>跟着小康学编程</strong>」！本号致力于分享<strong>C&#x2F;C++&#x2F;Go&#x2F;Java 语言学习、计算机基础原理、Linux 编程、数据库、微服务、容器技术</strong> 等内容。文章力求通俗易懂，并配有代码示例，方便初学者理解。如果您对这些内容感兴趣，欢迎关注我的公众号「<strong>跟着小康学编程</strong>」。</p><p>后续，我还会陆续分享各个方向的编程面试题，包括<strong>C&#x2F;C++、Java、Go，以及操作系统、计算机网络、数据结构、数据库和微服务</strong>等领域，为大家的面试提供帮助。</p><p><img src="/images/%E8%81%94%E7%B3%BB%E6%88%91/xkvxgzh.png"></p><p>此外，小康最近创建了一个技术交流群，专门用来讨论技术问题和解答读者的疑问。在阅读文章时，如果有不理解的知识点，欢迎大家加入交流群提问。我会尽力为大家解答。期待与大家共同进步！</p><p><img src="/images/%E8%81%94%E7%B3%BB%E6%88%91/grvx.png"></p>]]></content>
+      
+      
+      <categories>
+          
+          <category> 编程 </category>
+          
+          <category> 计算机网络面试 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 计算机网络面试 </tag>
+            
+            <tag> TCP </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>TCP 面试题 — 说说 TCP 四次挥手的过程？</title>
       <link href="/tcp-four-way-termination/"/>
       <url>/tcp-four-way-termination/</url>
