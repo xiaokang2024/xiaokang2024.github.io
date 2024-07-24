@@ -1,0 +1,334 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>网络安全面试题 — 什么是 CSRF 攻击？如何避免？ | 跟着小康学编程</title><meta name="author" content="小康"><meta name="copyright" content="小康"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="🚀 大家好，我是小康。 今天给大家分享一个 网络安全面试题 ：什么是 CSRF 攻击？如何避免？  小技巧：在面试中，可以参考下面的示例回答，这样回答简洁明了。详细介绍部分则是为了帮助大家系统学习，以便应对面试官深入提问。  示例回答CSRF攻击（跨站请求伪造）是一种通过欺骗用户在已登录状态下执行非预期操作的攻击。为了避免CSRF攻击，我们可以使用CSRF令牌、SameSite Cookie属性">
+<meta property="og:type" content="article">
+<meta property="og:title" content="网络安全面试题 — 什么是 CSRF 攻击？如何避免？">
+<meta property="og:url" content="http://example.com/csrf-attack-prevention/index.html">
+<meta property="og:site_name" content="跟着小康学编程">
+<meta property="og:description" content="🚀 大家好，我是小康。 今天给大家分享一个 网络安全面试题 ：什么是 CSRF 攻击？如何避免？  小技巧：在面试中，可以参考下面的示例回答，这样回答简洁明了。详细介绍部分则是为了帮助大家系统学习，以便应对面试官深入提问。  示例回答CSRF攻击（跨站请求伪造）是一种通过欺骗用户在已登录状态下执行非预期操作的攻击。为了避免CSRF攻击，我们可以使用CSRF令牌、SameSite Cookie属性">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/img/me.jpg">
+<meta property="article:published_time" content="2024-07-24T07:45:17.900Z">
+<meta property="article:modified_time" content="2024-07-24T08:04:19.696Z">
+<meta property="article:author" content="小康">
+<meta property="article:tag" content="计算机网络面试">
+<meta property="article:tag" content="网络安全">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/img/me.jpg"><link rel="shortcut icon" href="/img/me.jpg"><link rel="canonical" href="http://example.com/csrf-attack-prevention/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css?v=4.13.0"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.1/css/all.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.33/dist/fancybox/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":false,"top_n_per_article":1,"unescape":false,"languages":{"hits_empty":"找不到您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":false,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: {"limitCount":50,"languages":{"author":"作者: 小康","link":"链接: ","source":"来源: 跟着小康学编程","info":"著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。"}},
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid@4.11.1/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyload: true,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '网络安全面试题 — 什么是 CSRF 攻击？如何避免？',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2024-07-24 16:04:19'
+}</script><script>(win=>{
+      win.saveToLocal = {
+        set: (key, value, ttl) => {
+          if (ttl === 0) return
+          const now = Date.now()
+          const expiry = now + ttl * 86400000
+          const item = {
+            value,
+            expiry
+          }
+          localStorage.setItem(key, JSON.stringify(item))
+        },
+      
+        get: key => {
+          const itemStr = localStorage.getItem(key)
+      
+          if (!itemStr) {
+            return undefined
+          }
+          const item = JSON.parse(itemStr)
+          const now = Date.now()
+      
+          if (now > item.expiry) {
+            localStorage.removeItem(key)
+            return undefined
+          }
+          return item.value
+        }
+      }
+    
+      win.getScript = (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        script.onerror = reject
+        script.onload = script.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          script.onload = script.onreadystatechange = null
+          resolve()
+        }
+
+        Object.keys(attr).forEach(key => {
+          script.setAttribute(key, attr[key])
+        })
+
+        document.head.appendChild(script)
+      })
+    
+      win.getCSS = (url, id = false) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onerror = reject
+        link.onload = link.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          link.onload = link.onreadystatechange = null
+          resolve()
+        }
+        document.head.appendChild(link)
+      })
+    
+      win.activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+        if (t === 'dark') activateDarkMode()
+        else if (t === 'light') activateLightMode()
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+      const detectApple = () => {
+        if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+          document.documentElement.classList.add('apple')
+        }
+      }
+      detectApple()
+    })(window)</script><link rel="stylesheet" href="/css/iconfont/iconfont.css"><meta name="generator" content="Hexo 7.2.0"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/me.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">105</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">55</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">20</div></a></div><hr class="custom-hr"/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于笔者</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('/img/category_img.jpg')"><nav id="nav"><span id="blog-info"><a href="/" title="跟着小康学编程"><span class="site-name">跟着小康学编程</span></a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search" href="javascript:void(0);"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于笔者</span></a></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">网络安全面试题 — 什么是 CSRF 攻击？如何避免？</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2024-07-24T07:45:17.900Z" title="发表于 2024-07-24 15:45:17">2024-07-24</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2024-07-24T08:04:19.696Z" title="更新于 2024-07-24 16:04:19">2024-07-24</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E7%BC%96%E7%A8%8B/">编程</a><i class="fas fa-angle-right post-meta-separator"></i><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E7%BC%96%E7%A8%8B/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E9%9D%A2%E8%AF%95/">计算机网络面试</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">字数总计:</span><span class="word-count">3.8k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>13分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="网络安全面试题 — 什么是 CSRF 攻击？如何避免？"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><p>🚀 大家好，我是小康。</p>
+<p>今天给大家分享一个 网络安全面试题 ：<strong>什么是 CSRF 攻击？如何避免？</strong></p>
+<blockquote>
+<p><strong>小技巧</strong>：在面试中，可以参考下面的<strong>示例回答</strong>，这样回答简洁明了。<strong>详细介绍</strong>部分则是为了帮助大家系统学习，以便应对面试官深入提问。</p>
+</blockquote>
+<h3 id="示例回答"><a href="#示例回答" class="headerlink" title="示例回答"></a>示例回答</h3><p>CSRF攻击（跨站请求伪造）是一种通过欺骗用户在已登录状态下执行非预期操作的攻击。为了避免CSRF攻击，我们可以使用CSRF令牌、SameSite Cookie属性以及用户确认步骤。</p>
+<hr>
+<h3 id="详细解释"><a href="#详细解释" class="headerlink" title="详细解释"></a>详细解释</h3><p><strong>什么是 CSRF 攻击？</strong><br>CSRF（Cross-Site Request Forgery，跨站请求伪造）攻击是一种利用已认证用户的身份，向受信任的网站发送恶意请求的攻击方式。攻击者通过诱导用户点击恶意链接、访问恶意网站或嵌入恶意脚本等手段，在用户不知情的情况下，伪造合法请求发送给受信任的网站，从而执行非预期的操作，例如转账、修改用户信息等。<br><strong>CSRF 攻击的工作原理</strong></p>
+<ol>
+<li><strong>用户登录受信任网站</strong>：</li>
+</ol>
+<ul>
+<li>用户在浏览器中登录了受信任的网站，并保持登录状态（例如，浏览器中保存了会话Cookie）。</li>
+</ul>
+<ol start="2">
+<li><strong>攻击者准备恶意请求</strong>：</li>
+</ol>
+<ul>
+<li>攻击者构造一个恶意请求，例如转账请求或账户设置修改请求。</li>
+</ul>
+<ol start="3">
+<li><strong>用户访问恶意网站</strong>：</li>
+</ol>
+<ul>
+<li>用户在保持登录状态下，访问了攻击者控制的恶意网站，或点击了攻击者发送的恶意链接。</li>
+</ul>
+<ol start="4">
+<li><strong>恶意请求被执行</strong>：</li>
+</ol>
+<ul>
+<li>恶意网站在用户不知情的情况下，自动向受信任的网站发送伪造请求。由于用户已登录，受信任的网站会将请求视为合法用户的请求并执行相应操作(例如转账请求)。</li>
+</ul>
+<h4 id="示例"><a href="#示例" class="headerlink" title="示例"></a>示例</h4><p>假设你在一个银行网站上登录，URL为<code>https://bank.com</code>，并保持登录状态。攻击者发送了一封电子邮件，诱导你点击一个恶意链接：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">html</span><br><span class="line">复制代码</span><br><span class="line">&lt;a href=&quot;https://bank.com/transfer?amount=1000&amp;to_account=attacker&quot;&gt;Click here to see something interesting&lt;/a&gt;</span><br></pre></td></tr></table></figure>
+<p>当你点击这个链接，浏览器会向银行网站发送转账请求，由于你已登录，银行网站会执行这次转账操作。</p>
+<h3 id="如何避免-CSRF-攻击？"><a href="#如何避免-CSRF-攻击？" class="headerlink" title="如何避免 CSRF 攻击？"></a>如何避免 CSRF 攻击？</h3><h4 id="1-使用动态的CSRF令牌"><a href="#1-使用动态的CSRF令牌" class="headerlink" title="1. 使用动态的CSRF令牌"></a>1. 使用动态的CSRF令牌</h4><p><strong>原理</strong>：在每个敏感操作的表单中嵌入一个唯一的、随机生成的CSRF令牌，每次请求都会生成新的令牌。服务器端在接收到请求时，验证该令牌是否正确，以确保请求是合法的。<br><strong>示例</strong>：</p>
+<ul>
+<li><strong>生成和嵌入CSRF令牌</strong>： 当用户访问页面时，服务器生成一个唯一的CSRF令牌并存储在会话中，然后将该令牌嵌入到表单的隐藏字段中。</li>
+<li><strong>验证CSRF令牌</strong>： 当用户提交表单时，服务器从请求中获取CSRF令牌，并与会话中的令牌进行比较。如果匹配，则处理请求并生成新的CSRF令牌。<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 示例代码（Flask）</span></span><br><span class="line"><span class="meta">@app.route(<span class="params"><span class="string">&#x27;/&#x27;</span></span>)</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">index</span>():</span><br><span class="line">    csrf_token = secrets.token_urlsafe()</span><br><span class="line">    session[<span class="string">&#x27;csrf_token&#x27;</span>] = csrf_token</span><br><span class="line">    <span class="keyword">return</span> render_template_string(<span class="string">&#x27;&#x27;&#x27;</span></span><br><span class="line"><span class="string">        &lt;form method=&quot;post&quot; action=&quot;/transfer&quot;&gt;</span></span><br><span class="line"><span class="string">            &lt;input type=&quot;hidden&quot; name=&quot;csrf_token&quot; value=&quot;&#123;&#123; csrf_token &#125;&#125;&quot;&gt;</span></span><br><span class="line"><span class="string">            &lt;input type=&quot;text&quot; name=&quot;amount&quot; placeholder=&quot;Amount&quot;&gt;</span></span><br><span class="line"><span class="string">            &lt;input type=&quot;text&quot; name=&quot;to_account&quot; placeholder=&quot;Recipient&quot;&gt;</span></span><br><span class="line"><span class="string">            &lt;input type=&quot;submit&quot; value=&quot;Submit&quot;&gt;</span></span><br><span class="line"><span class="string">        &lt;/form&gt;</span></span><br><span class="line"><span class="string">    &#x27;&#x27;&#x27;</span>, csrf_token=csrf_token)</span><br><span class="line"></span><br><span class="line"><span class="meta">@app.route(<span class="params"><span class="string">&#x27;/transfer&#x27;</span>, methods=[<span class="string">&#x27;POST&#x27;</span>]</span>)</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">transfer</span>():</span><br><span class="line">    token = request.form.get(<span class="string">&#x27;csrf_token&#x27;</span>)</span><br><span class="line">    stored_token = session.pop(<span class="string">&#x27;csrf_token&#x27;</span>, <span class="literal">None</span>)  <span class="comment"># 从会话中移除令牌</span></span><br><span class="line">    <span class="keyword">if</span> <span class="keyword">not</span> token <span class="keyword">or</span> token != stored_token:</span><br><span class="line">        abort(<span class="number">403</span>)  <span class="comment"># Forbidden</span></span><br><span class="line">    <span class="comment"># 生成新的CSRF令牌</span></span><br><span class="line">    new_csrf_token = secrets.token_urlsafe()</span><br><span class="line">    session[<span class="string">&#x27;csrf_token&#x27;</span>] = new_csrf_token</span><br><span class="line">    <span class="keyword">return</span> <span class="string">f&#x27;Transfer completed successfully, new CSRF token: <span class="subst">&#123;new_csrf_token&#125;</span>&#x27;</span></span><br></pre></td></tr></table></figure></li>
+</ul>
+<h4 id="2-使用自定义HTTP头部"><a href="#2-使用自定义HTTP头部" class="headerlink" title="2. 使用自定义HTTP头部"></a>2. 使用自定义HTTP头部</h4><p><strong>原理</strong>：在前端请求时，添加自定义的HTTP头部，例如<code>X-CSRF-Token</code>，服务器在接收到请求时，验证该头部的值是否正确。每次请求都使用新的CSRF令牌。<br><strong>示例</strong>：</p>
+<ul>
+<li><strong>前端发送请求时添加自定义HTTP头部</strong>： 前端在发起请求时，将CSRF令牌添加到自定义HTTP头部中。</li>
+<li><strong>服务器验证自定义HTTP头部</strong>： 服务器从请求头中获取CSRF令牌，并与会话中的令牌进行比较。如果匹配，则处理请求并生成新的CSRF令牌。<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 示例代码（前端）</span></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">sendRequest</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="keyword">const</span> xhr = <span class="keyword">new</span> <span class="title class_">XMLHttpRequest</span>();</span><br><span class="line">  xhr.<span class="title function_">open</span>(<span class="string">&quot;POST&quot;</span>, <span class="string">&quot;/transfer&quot;</span>, <span class="literal">true</span>);</span><br><span class="line">  xhr.<span class="title function_">setRequestHeader</span>(<span class="string">&quot;X-CSRF-Token&quot;</span>, <span class="string">&quot;&#123;&#123; csrf_token &#125;&#125;&quot;</span>);</span><br><span class="line">  xhr.<span class="property">onreadystatechange</span> = <span class="keyword">function</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="keyword">if</span> (xhr.<span class="property">readyState</span> === <span class="number">4</span> &amp;&amp; xhr.<span class="property">status</span> === <span class="number">200</span>) &#123;</span><br><span class="line">      <span class="variable language_">console</span>.<span class="title function_">log</span>(xhr.<span class="property">responseText</span>);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;;</span><br><span class="line">  xhr.<span class="title function_">send</span>();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 示例代码（Flask 后端代码）</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 代码功能：在用户访问页面时生成一个唯一的CSRF令牌，并将其存储在会话中和嵌入到前端JavaScript代码中。</span></span><br><span class="line"><span class="comment"># 当用户点击按钮时，前端代码会通过XMLHttpRequest发送一个带有CSRF令牌的POST请求到服务器。</span></span><br><span class="line"></span><br><span class="line"><span class="meta">@app.route(<span class="params"><span class="string">&#x27;/&#x27;</span></span>)</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">index</span>():</span><br><span class="line">    csrf_token = secrets.token_urlsafe()</span><br><span class="line">    session[<span class="string">&#x27;csrf_token&#x27;</span>] = csrf_token</span><br><span class="line">    <span class="keyword">return</span> render_template_string(<span class="string">&#x27;&#x27;&#x27;</span></span><br><span class="line"><span class="string">        &lt;button onclick=&quot;sendRequest()&quot;&gt;Submit&lt;/button&gt;</span></span><br><span class="line"><span class="string">        &lt;script&gt;</span></span><br><span class="line"><span class="string">        function sendRequest() &#123;</span></span><br><span class="line"><span class="string">            const xhr = new XMLHttpRequest();</span></span><br><span class="line"><span class="string">            xhr.open(&quot;POST&quot;, &quot;/transfer&quot;, true);</span></span><br><span class="line"><span class="string">            xhr.setRequestHeader(&quot;X-CSRF-Token&quot;, &quot;&#123;&#123; csrf_token &#125;&#125;&quot;);</span></span><br><span class="line"><span class="string">            xhr.onreadystatechange = function() &#123;</span></span><br><span class="line"><span class="string">                if (xhr.readyState === 4 &amp;&amp; xhr.status === 200) &#123;</span></span><br><span class="line"><span class="string">                    console.log(xhr.responseText);</span></span><br><span class="line"><span class="string">                &#125;</span></span><br><span class="line"><span class="string">            &#125;;</span></span><br><span class="line"><span class="string">            xhr.send();</span></span><br><span class="line"><span class="string">        &#125;</span></span><br><span class="line"><span class="string">        &lt;/script&gt;</span></span><br><span class="line"><span class="string">    &#x27;&#x27;&#x27;</span>, csrf_token=csrf_token)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># 这个代码在处理POST请求时，从请求头中获取CSRF令牌并与会话中的令牌进行比较。</span></span><br><span class="line"><span class="comment"># 如果令牌匹配，则处理请求并生成一个新的CSRF令牌存储在会话中，同时返回成功信息和新的CSRF令牌。</span></span><br><span class="line"><span class="comment"># 这样可以确保请求的合法性并防止CSRF攻击。 </span></span><br><span class="line"></span><br><span class="line"><span class="meta">@app.route(<span class="params"><span class="string">&#x27;/transfer&#x27;</span>, methods=[<span class="string">&#x27;POST&#x27;</span>]</span>)</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">transfer</span>():</span><br><span class="line">    token = request.headers.get(<span class="string">&#x27;X-CSRF-Token&#x27;</span>)</span><br><span class="line">    stored_token = session.pop(<span class="string">&#x27;csrf_token&#x27;</span>, <span class="literal">None</span>)  <span class="comment"># 从会话中移除令牌</span></span><br><span class="line">    <span class="keyword">if</span> <span class="keyword">not</span> token <span class="keyword">or</span> token != stored_token:</span><br><span class="line">        abort(<span class="number">403</span>)  <span class="comment"># Forbidden</span></span><br><span class="line">    <span class="comment"># 生成新的CSRF令牌</span></span><br><span class="line">    new_csrf_token = secrets.token_urlsafe()</span><br><span class="line">    session[<span class="string">&#x27;csrf_token&#x27;</span>] = new_csrf_token</span><br><span class="line">    <span class="keyword">return</span> <span class="string">f&#x27;Transfer completed successfully, new CSRF token: <span class="subst">&#123;new_csrf_token&#125;</span>&#x27;</span></span><br></pre></td></tr></table></figure></li>
+</ul>
+<p><strong>这里说下使用动态的CSRF令牌和自定义HTTP头部的区别</strong>：<br>使用动态的CSRF令牌主要适用于传统的表单提交，它通过在表单中嵌入一个每次访问页面时都会更新的令牌来防护。而自定义HTTP头部，特别是用于AJAX和API请求，通过在每次请求中添加一个可能会更新的令牌到HTTP请求头中，使得它更适合现代的Web应用程序。简单来说，前者多用于用户直接交互的表单，后者则适用于后台数据交互。  </p>
+<h4 id="3-使用SameSite-Cookie属性"><a href="#3-使用SameSite-Cookie属性" class="headerlink" title="3. 使用SameSite Cookie属性"></a>3. 使用SameSite Cookie属性</h4><p><strong>原理</strong>：<br>SameSite Cookie属性通过限制Cookie的发送范围来防止浏览器在跨站请求中发送Cookie，从而避免CSRF攻击。具体来说，SameSite属性有三个值：</p>
+<ul>
+<li><strong>Strict</strong>：Cookie仅在同站请求中发送，即只有在请求源与Cookie所在的站点完全相同时，Cookie才会被发送。这是最严格的设置，防止所有跨站请求发送Cookie。</li>
+<li><strong>Lax</strong>：Cookie在同站请求中发送，以及用户导航到目标站点的跨站请求中发送（例如，通过点击链接）。这种模式在防止CSRF攻击的同时，允许大多数正常的跨站功能。</li>
+<li><strong>None</strong>：Cookie在所有请求中发送，包括跨站请求。这种模式不提供防止CSRF攻击的保护。</li>
+</ul>
+<p><strong>如何工作？</strong><br>当Cookie设置了SameSite属性为<code>Strict</code>或<code>Lax</code>时，浏览器会限制跨站请求中的Cookie发送：</p>
+<ol>
+<li><strong>SameSite&#x3D;Strict</strong>：如果一个请求是从不同的站点发起的（即跨站请求），浏览器不会发送这个Cookie。因此，攻击者无法利用用户的Cookie进行伪造请求。</li>
+<li><strong>SameSite&#x3D;Lax</strong>：浏览器只会在用户导航操作（如点击链接）发起的跨站请求中发送Cookie，而不会在其他类型的跨站请求（如表单提交、图片加载等）中发送Cookie，从而减少CSRF攻击的风险。</li>
+</ol>
+<p><strong>实际例子</strong>：<br>假设用户登录了一个银行网站，该网站的Cookie设置了<code>SameSite=Lax</code>属性：</p>
+<figure class="highlight http"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">Set-Cookie</span><span class="punctuation">: </span>sessionid=abc123; SameSite=Lax</span><br></pre></td></tr></table></figure>
+
+<p><strong>场景1：正常操作</strong></p>
+<ul>
+<li>用户在银行网站上进行操作，如查看账户信息或转账。</li>
+<li>因为这些请求都是从同一个站点发起的，浏览器会发送Cookie（<code>sessionid=abc123</code>），服务器会验证用户身份并处理请求。</li>
+</ul>
+<p><strong>场景2：CSRF攻击尝试</strong></p>
+<ul>
+<li>攻击者在恶意网站上放置了一个表单，诱骗用户提交该表单向银行网站发起转账请求。</li>
+</ul>
+<p>攻击者网站上的恶意表单：</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">form</span> <span class="attr">action</span>=<span class="string">&quot;https://bank.com/transfer&quot;</span> <span class="attr">method</span>=<span class="string">&quot;POST&quot;</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">&quot;hidden&quot;</span> <span class="attr">name</span>=<span class="string">&quot;amount&quot;</span> <span class="attr">value</span>=<span class="string">&quot;1000&quot;</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">&quot;hidden&quot;</span> <span class="attr">name</span>=<span class="string">&quot;to_account&quot;</span> <span class="attr">value</span>=<span class="string">&quot;attacker_account&quot;</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">&quot;submit&quot;</span> <span class="attr">value</span>=<span class="string">&quot;Transfer Money&quot;</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">form</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>用户在不知情的情况下点击了提交按钮，表单向银行网站发送了请求。</li>
+<li>由于请求是从不同的站点发起的（跨站请求），浏览器不会发送带有<code>SameSite=Lax</code>属性的Cookie（<code>sessionid=abc123</code>）。这样，攻击者就无法利用用户的Cookie进行伪造请求。</li>
+</ul>
+<p><strong>结果</strong>：</p>
+<ul>
+<li>银行网站接收到请求，但因为没有<code>sessionid</code> Cookie，无法验证用户的身份，服务器会拒绝处理请求。</li>
+<li>这样，攻击者就无法利用用户的登录状态在银行网站上进行伪造的转账操作，CSRF攻击被阻止。</li>
+</ul>
+<p>通过设置SameSite Cookie属性，浏览器限制了在跨站请求中发送Cookie的行为，有效防止了CSRF攻击。这个方法简单而有效，适用于大多数Web应用的CSRF防护。</p>
+<h4 id="4、使用确保重要操作需要用户确认"><a href="#4、使用确保重要操作需要用户确认" class="headerlink" title="4、使用确保重要操作需要用户确认"></a>4、使用确保重要操作需要用户确认</h4><p><strong>原理</strong>：确保重要操作需要用户确认是一种有效的防止CSRF攻击的方法。通过增加二次确认步骤，即使攻击者设法让用户发起了一个请求，也无法完成关键操作，因为需要额外的用户验证。这种方式增加了额外的安全检查，使得攻击者无法绕过这些验证步骤。<br><strong>如何工作？</strong><br>当用户进行敏感操作时（如转账、修改密码等），系统要求用户重新输入密码、提供验证码或通过其他方式进行确认，以确保操作是由用户本人发起的，而不是被恶意网站伪造的。<br><strong>实际例子</strong>：<br>假设用户登录了一个银行网站，并要进行转账操作。为了防止CSRF攻击，银行网站在用户提交转账请求时，要求用户输入密码进行二次确认。<br><strong>场景1：正常操作</strong></p>
+<ol>
+<li><strong>用户操作</strong>：</li>
+</ol>
+<ul>
+<li>用户在银行网站上选择转账，并填写转账金额和接收账户信息。</li>
+</ul>
+<ol start="2">
+<li><strong>确认操作</strong>：</li>
+</ol>
+<ul>
+<li>在用户提交转账请求时，系统弹出一个对话框，要求用户输入当前密码进行确认。</li>
+</ul>
+<ol start="3">
+<li><strong>验证操作</strong>：</li>
+</ol>
+<ul>
+<li>用户输入密码，系统验证密码是否正确。如果正确，完成转账操作。</li>
+</ul>
+<p><strong>场景2：CSRF攻击尝试</strong></p>
+<ol>
+<li><strong>攻击者设置陷阱</strong>：</li>
+</ol>
+<ul>
+<li>攻击者在恶意网站上放置了一个表单，诱骗用户提交该表单向银行网站发起转账请求。</li>
+</ul>
+<p>攻击者网站上的恶意表单：</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">form</span> <span class="attr">action</span>=<span class="string">&quot;https://bank.com/transfer&quot;</span> <span class="attr">method</span>=<span class="string">&quot;POST&quot;</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">&quot;hidden&quot;</span> <span class="attr">name</span>=<span class="string">&quot;amount&quot;</span> <span class="attr">value</span>=<span class="string">&quot;1000&quot;</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">&quot;hidden&quot;</span> <span class="attr">name</span>=<span class="string">&quot;to_account&quot;</span> <span class="attr">value</span>=<span class="string">&quot;attacker_account&quot;</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">&quot;submit&quot;</span> <span class="attr">value</span>=<span class="string">&quot;Transfer Money&quot;</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">form</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<ol>
+<li><strong>用户无意点击</strong>：</li>
+</ol>
+<ul>
+<li>用户在不知情的情况下点击了提交按钮，表单向银行网站发送了请求。</li>
+</ul>
+<ol start="2">
+<li><strong>系统要求确认</strong>：</li>
+</ol>
+<ul>
+<li>银行网站接收到转账请求，但在处理之前，系统弹出一个对话框，要求用户输入当前密码进行确认。</li>
+</ul>
+<ol start="3">
+<li><strong>验证失败</strong>：</li>
+</ol>
+<ul>
+<li>因为这是一个伪造请求，用户无法输入正确的密码进行确认。</li>
+<li>系统拒绝处理转账请求。</li>
+</ul>
+<p><strong>实际代码示例</strong>：</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!-- 用户提交转账表单 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">form</span> <span class="attr">method</span>=<span class="string">&quot;post&quot;</span> <span class="attr">action</span>=<span class="string">&quot;/transfer&quot;</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">&quot;text&quot;</span> <span class="attr">name</span>=<span class="string">&quot;amount&quot;</span> <span class="attr">placeholder</span>=<span class="string">&quot;Amount&quot;</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">&quot;text&quot;</span> <span class="attr">name</span>=<span class="string">&quot;to_account&quot;</span> <span class="attr">placeholder</span>=<span class="string">&quot;Recipient&quot;</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">&quot;password&quot;</span> <span class="attr">name</span>=<span class="string">&quot;password&quot;</span> <span class="attr">placeholder</span>=<span class="string">&quot;Enter your password to confirm&quot;</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">&quot;submit&quot;</span> <span class="attr">value</span>=<span class="string">&quot;Submit&quot;</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">form</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 示例代码（Flask 后端）</span></span><br><span class="line"><span class="meta">@app.route(<span class="params"><span class="string">&#x27;/transfer&#x27;</span>, methods=[<span class="string">&#x27;POST&#x27;</span>]</span>)</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">transfer</span>():</span><br><span class="line">    amount = request.form.get(<span class="string">&#x27;amount&#x27;</span>)</span><br><span class="line">    to_account = request.form.get(<span class="string">&#x27;to_account&#x27;</span>)</span><br><span class="line">    password = request.form.get(<span class="string">&#x27;password&#x27;</span>)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 验证用户密码是否正确</span></span><br><span class="line">    <span class="keyword">if</span> <span class="keyword">not</span> validate_user_password(password):</span><br><span class="line">        abort(<span class="number">403</span>)  <span class="comment"># Forbidden</span></span><br><span class="line"></span><br><span class="line">    <span class="comment"># 处理转账操作</span></span><br><span class="line">    process_transfer(amount, to_account)</span><br><span class="line">    <span class="keyword">return</span> <span class="string">&#x27;Transfer completed successfully&#x27;</span></span><br></pre></td></tr></table></figure>
+
+<p>通过确保重要操作需要用户确认，可以有效防止CSRF攻击。即使攻击者成功发起了伪造请求，系统也会在处理关键操作前要求用户进行额外的验证步骤，如重新输入密码。这种方式增加了操作的安全性，使得攻击者无法绕过这些验证，从而保护用户的敏感操作不被恶意利用。<br>这种方法的关键在于确保每一个重要的操作都需要用户的主动确认，增加了安全层，使得CSRF攻击变得无效。</p>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>关于如何有效避免CSRF攻击，这里简单总结下：</p>
+<ol>
+<li><strong>使用动态的CSRF令牌</strong>：每次请求生成一个唯一的令牌，并在服务器端进行验证，确保请求的合法性。</li>
+<li><strong>使用自定义HTTP头部</strong>：在请求中添加自定义头部并验证其值，防止跨站请求。</li>
+<li><strong>使用SameSite Cookie属性</strong>：限制Cookie的发送范围，防止浏览器在跨站请求中发送Cookie。</li>
+<li><strong>确保重要操作需要用户确认</strong>：对关键操作进行二次验证，如要求重新输入密码，确保操作是由用户本人发起的。</li>
+</ol>
+<p>通过这些措施，可以显著提高Web应用的安全性，防止CSRF攻击，保护用户的数据和操作安全。</p>
+<h2 id="最后"><a href="#最后" class="headerlink" title="最后:"></a>最后:</h2><p>欢迎大家关注我的微信公众号「<strong>跟着小康学编程</strong>」！本号致力于分享<strong>C&#x2F;C++&#x2F;Go&#x2F;Java 语言学习、计算机基础原理、Linux 编程、数据库、微服务、容器技术</strong> 等内容。文章力求通俗易懂，并配有代码示例，方便初学者理解。如果您对这些内容感兴趣，欢迎关注我的公众号「<strong>跟着小康学编程</strong>」。</p>
+<p>后续，我还会陆续分享各个方向的编程面试题，包括<strong>C&#x2F;C++、Java、Go，以及操作系统、计算机网络、数据结构、数据库和微服务</strong>等领域，为大家的面试提供帮助。</p>
+<p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/images/%E8%81%94%E7%B3%BB%E6%88%91/xkvxgzh.png"></p>
+<p>此外，小康最近创建了一个技术交流群，专门用来讨论技术问题和解答读者的疑问。在阅读文章时，如果有不理解的知识点，欢迎大家加入交流群提问。我会尽力为大家解答。期待与大家共同进步！</p>
+<p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/images/%E8%81%94%E7%B3%BB%E6%88%91/grvx.png"></p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="http://example.com">小康</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="http://example.com/csrf-attack-prevention/">http://example.com/csrf-attack-prevention/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="http://example.com" target="_blank">跟着小康学编程</a>！</span></div></div><!-- 添加赞赏二维码--><div class="reward-container" style="text-align: center; margin-top: 20px;"><div class="reward-item" style="display: inline-block; margin: 10px;"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/wechat.jpg" alt="请作者喝咖啡" style="width: 150px; height: 150px;"><div>请作者喝咖啡</div></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E9%9D%A2%E8%AF%95/">计算机网络面试</a><a class="post-meta__tags" href="/tags/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/">网络安全</a></div><div class="post_share"><div class="social-share" data-image="/img/me.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.3/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.3/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/dos-ddos-drdos-attacks-explained/" title="网络安全面试题 — 什么是 DoS、DDoS、DRDoS 攻击？"><div class="cover" style="background: var(--default-bg-color)"></div><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">网络安全面试题 — 什么是 DoS、DDoS、DRDoS 攻击？</div></div></a></div><div class="next-post pull-right"><a href="/xss-attack-prevention/" title="网络安全面试题 — 什么是 XSS 攻击，如何避免?"><div class="cover" style="background: var(--default-bg-color)"></div><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">网络安全面试题 — 什么是 XSS 攻击，如何避免?</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/types-of-security-attacks/" title="网络安全面试题 — 说说有哪些安全攻击？"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-07-24</div><div class="title">网络安全面试题 — 说说有哪些安全攻击？</div></div></a></div><div><a href="/understanding-dns-hijacking/" title="网络安全面试题 — DNS劫持了解吗？"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-07-24</div><div class="title">网络安全面试题 — DNS劫持了解吗？</div></div></a></div><div><a href="/dos-ddos-drdos-attacks-explained/" title="网络安全面试题 — 什么是 DoS、DDoS、DRDoS 攻击？"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-07-24</div><div class="title">网络安全面试题 — 什么是 DoS、DDoS、DRDoS 攻击？</div></div></a></div><div><a href="/xss-attack-prevention/" title="网络安全面试题 — 什么是 XSS 攻击，如何避免?"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-07-24</div><div class="title">网络安全面试题 — 什么是 XSS 攻击，如何避免?</div></div></a></div><div><a href="/sql-injection-prevention/" title="网络安全面试题 — 什么是 SQL 注入？如何避免?"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-07-24</div><div class="title">网络安全面试题 — 什么是 SQL 注入？如何避免?</div></div></a></div><div><a href="/encryption-differences/" title="网络安全面试题 — 对称加密与非对称加密的区别？"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-07-21</div><div class="title">网络安全面试题 — 对称加密与非对称加密的区别？</div></div></a></div></div></div><hr class="custom-hr"/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div class="vcomment" id="vcomment"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/me.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">小康</div><div class="author-info__description">程序猿一枚，也是一名编程狂热者</div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">105</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">55</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">20</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://xiaokang2024.github.io/xiaokangvx/"><i class="fab fa-weixin"></i><span>关注跟着小康学编程</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://xiaokang2024.github.io/images/xiaokanggzh.png" target="_blank" title="&quot;微信公众号&quot;"><i class="iconfont icon-weixingongzhonghao" style="color: #07C160;"></i></a><a class="social-icon" href="https://xiaokang2024.github.io/images/xiaokang-weixin.png" target="_blank" title="&quot;WeChat&quot;"><i class="iconfont icon-weixin" style="color: #1aad19;"></i></a><a class="social-icon" href="https://www.zhihu.com/people/jkhenryer" target="_blank" title="&quot;知乎&quot;"><i class="iconfont icon-zhihu" style="color: #0084ff;"></i></a><a class="social-icon" href="https://github.com/xiaokang2024" target="_blank" title="Github"><i class="fab fa-github" style="color: #24292e;"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">欢迎访问我的编程学习网站！关注我的微信公众号「跟着小康学编程」，不错过任何更新和独家内容！</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%A4%BA%E4%BE%8B%E5%9B%9E%E7%AD%94"><span class="toc-number">1.</span> <span class="toc-text">示例回答</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%AF%A6%E7%BB%86%E8%A7%A3%E9%87%8A"><span class="toc-number">2.</span> <span class="toc-text">详细解释</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%A4%BA%E4%BE%8B"><span class="toc-number">2.1.</span> <span class="toc-text">示例</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%A6%82%E4%BD%95%E9%81%BF%E5%85%8D-CSRF-%E6%94%BB%E5%87%BB%EF%BC%9F"><span class="toc-number">3.</span> <span class="toc-text">如何避免 CSRF 攻击？</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#1-%E4%BD%BF%E7%94%A8%E5%8A%A8%E6%80%81%E7%9A%84CSRF%E4%BB%A4%E7%89%8C"><span class="toc-number">3.1.</span> <span class="toc-text">1. 使用动态的CSRF令牌</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-%E4%BD%BF%E7%94%A8%E8%87%AA%E5%AE%9A%E4%B9%89HTTP%E5%A4%B4%E9%83%A8"><span class="toc-number">3.2.</span> <span class="toc-text">2. 使用自定义HTTP头部</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-%E4%BD%BF%E7%94%A8SameSite-Cookie%E5%B1%9E%E6%80%A7"><span class="toc-number">3.3.</span> <span class="toc-text">3. 使用SameSite Cookie属性</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#4%E3%80%81%E4%BD%BF%E7%94%A8%E7%A1%AE%E4%BF%9D%E9%87%8D%E8%A6%81%E6%93%8D%E4%BD%9C%E9%9C%80%E8%A6%81%E7%94%A8%E6%88%B7%E7%A1%AE%E8%AE%A4"><span class="toc-number">3.4.</span> <span class="toc-text">4、使用确保重要操作需要用户确认</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%80%BB%E7%BB%93"><span class="toc-number">4.</span> <span class="toc-text">总结</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9C%80%E5%90%8E"><span class="toc-number"></span> <span class="toc-text">最后:</span></a></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/types-of-security-attacks/" title="网络安全面试题 — 说说有哪些安全攻击？">网络安全面试题 — 说说有哪些安全攻击？</a><time datetime="2024-07-24T07:45:18.972Z" title="发表于 2024-07-24 15:45:18">2024-07-24</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/understanding-dns-hijacking/" title="网络安全面试题 — DNS劫持了解吗？">网络安全面试题 — DNS劫持了解吗？</a><time datetime="2024-07-24T07:45:18.915Z" title="发表于 2024-07-24 15:45:18">2024-07-24</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/dos-ddos-drdos-attacks-explained/" title="网络安全面试题 — 什么是 DoS、DDoS、DRDoS 攻击？">网络安全面试题 — 什么是 DoS、DDoS、DRDoS 攻击？</a><time datetime="2024-07-24T07:45:17.965Z" title="发表于 2024-07-24 15:45:17">2024-07-24</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/csrf-attack-prevention/" title="网络安全面试题 — 什么是 CSRF 攻击？如何避免？">网络安全面试题 — 什么是 CSRF 攻击？如何避免？</a><time datetime="2024-07-24T07:45:17.900Z" title="发表于 2024-07-24 15:45:17">2024-07-24</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/xss-attack-prevention/" title="网络安全面试题 — 什么是 XSS 攻击，如何避免?">网络安全面试题 — 什么是 XSS 攻击，如何避免?</a><time datetime="2024-07-24T07:45:17.355Z" title="发表于 2024-07-24 15:45:17">2024-07-24</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2024 By 小康</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="直达评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=4.13.0"></script><script src="/js/main.js?v=4.13.0"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.33/dist/fancybox/fancybox.umd.min.js"></script><script src="https://cdn.jsdelivr.net/npm/vanilla-lazyload@17.8.8/dist/lazyload.iife.min.js"></script><div class="js-pjax"><script>(() => {
+  const initValine = () => {
+    const valine = new Valine(Object.assign({
+      el: '#vcomment',
+      appId: 'yNXYnuxkePack1IfO9FTTxA9-gzGzoHsz',
+      appKey: 'bs6gdkXWDYvN826BUX5Xl53U',
+      avatar: 'monsterid',
+      serverURLs: 'https://ynxynuxk.lc-cn-n1-shared.com',
+      emojiMaps: "",
+      path: window.location.pathname,
+      visitor: true
+    }, null))
+  }
+
+  const loadValine = async () => {
+    if (typeof Valine === 'function') initValine()
+    else {
+      await getScript('https://cdn.jsdelivr.net/npm/valine@1.5.1/dist/Valine.min.js')
+      initValine()
+    }
+  }
+
+  if ('Valine' === 'Valine' || !true) {
+    if (true) btf.loadComment(document.getElementById('vcomment'),loadValine)
+    else setTimeout(loadValine, 0)
+  } else {
+    window.loadOtherComment = loadValine
+  }
+})()</script></div><script src="/js/wechat.js"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="is-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据库加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div><hr/><div id="local-search-results"></div><div id="local-search-stats-wrap"></div></div></div><div id="search-mask"></div><script src="/js/search/local-search.js?v=4.13.0"></script></div></div></body></html>
